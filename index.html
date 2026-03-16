@@ -50,7 +50,13 @@
             background: rgba(250, 166, 26, 0.1);
             border-bottom: 1px solid var(--warning);
             color: var(--warning);
-            padding: 5px 0; font-size: 0.9rem; position: fixed; top: 65px; left: 0; width: 100%; z-index: 999;
+            padding: 5px 0;
+            font-size: 0.9rem;
+            position: fixed;
+            top: 65px;
+            left: 0;
+            width: 100%;
+            z-index: 999;
         }
 
         .navbar { 
@@ -215,6 +221,7 @@
         <div class="modal-box" style="max-width: 700px;">
             <h2 style="margin-bottom: 5px;">จัดการข้อมูลสมาชิก</h2>
             <p id="edit-u-name" style="color:var(--primary); font-size:1.2rem; margin-bottom:20px;"></p>
+            
             <div class="admin-edit-grid">
                 <div>
                     <label>เครดิตคงเหลือ</label>
@@ -392,7 +399,6 @@
                 <div class="side-item" onclick="switchAdminPage('a-history', this)">📜 ประวัติทั้งหมด</div>
                 <div style="margin-top:auto; padding:20px;"><button class="btn btn-danger" style="width:100%;" onclick="logout()">ออกจากระบบ</button></div>
             </div>
-
             <div class="admin-content" id="admin-content-area">
                 <div id="a-users" class="a-page">
                     <h2>👥 จัดการสมาชิก</h2>
@@ -405,47 +411,6 @@
                             <thead><tr><th>ชื่อผู้ใช้</th><th>รหัสผ่าน</th><th>เครดิต</th><th>สิทธิ์วงล้อ</th><th>จัดการ</th><th>ลบ</th></tr></thead>
                             <tbody id="list-admin-users"></tbody>
                         </table>
-                    </div>
-                </div>
-
-                <div id="a-customize" class="a-page hidden">
-                    <h2>🎨 ปรับแต่งรูปแบบ & ข้อความประกาศ</h2>
-                    <div class="card">
-                        <h3>1. ข้อมูลเว็บไซต์ (Header)</h3>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                            <div><label>ชื่อเว็บกลางหน้า Home</label><input id="set-web-name" placeholder="ชื่อเว็บไซต์หน้า Home"></div>
-                            <div><label>ชื่อเว็บมุมขวาบน</label><input id="set-top-right-name" placeholder="ชื่อที่จะโชว์มุมขวาบน"></div>
-                        </div>
-                        <input id="set-logo-url" placeholder="URL รูปโลโก้">
-                        
-                        <h3 style="margin-top:20px;">2. จัดการ QR Code เติมเงิน (Scan Bill)</h3>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                            <div><label>URL รูป QR Code (1:1)</label><input id="set-qr-url" placeholder="URL รูปภาพ QR Code"></div>
-                            <div><label>Link ตรวจสอบยอด (ถ้ามี)</label><input id="set-qr-link" placeholder="ลิงก์สำหรับแสกนบิล"></div>
-                        </div>
-
-                        <h3 style="margin-top:20px;">3. ข้อความประกาศตัววิ่ง (Marquee)</h3>
-                        <input id="set-marquee-text" placeholder="ใส่ข้อความที่จะให้วิ่งบนหน้าเว็บ">
-
-                        <h3 style="margin-top:20px;">4. สีพื้นหลัง (Admin Panel Only)</h3>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
-                            <div><label>สีหลัก</label><input type="color" id="set-color-1"></div>
-                            <div><label>สีตัด</label><input type="color" id="set-color-2"></div>
-                        </div>
-
-                        <h3 style="margin-top:20px;">5. Banner Slideshow & Links</h3>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                            <input id="set-b-0" placeholder="Banner 1 (URL)">
-                            <input id="set-l-0" placeholder="Link สำหรับ Banner 1">
-                            <input id="set-b-1" placeholder="Banner 2 (URL)">
-                            <input id="set-l-1" placeholder="Link สำหรับ Banner 2">
-                            <input id="set-b-2" placeholder="Banner 3 (URL)">
-                            <input id="set-l-2" placeholder="Link สำหรับ Banner 3">
-                            <input id="set-b-3" placeholder="Banner 4 (URL)">
-                            <input id="set-l-3" placeholder="Link สำหรับ Banner 4">
-                        </div>
-
-                        <button onclick="saveCustomSettings()" class="btn btn-success" style="width:100%; margin-top:25px;">💾 บันทึกการปรับแต่งทั้งหมด</button>
                     </div>
                 </div>
 
@@ -466,6 +431,42 @@
                             <thead><tr><th>ผู้ใช้</th><th>จำนวน</th><th>ธนาคาร/บัญชี</th><th>วัน-เวลา</th><th>จัดการ</th></tr></thead>
                             <tbody id="list-admin-withdraw-queue"></tbody>
                         </table>
+                    </div>
+                </div>
+
+                <div id="a-customize" class="a-page hidden">
+                    <h2>🎨 ปรับแต่งรูปแบบ & ข้อความประกาศ</h2>
+                    <div class="card">
+                        <h3>1. ข้อมูลเว็บไซต์ (Header)</h3>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                            <div><label>ชื่อเว็บกลางหน้า Home</label><input id="set-web-name" placeholder="ชื่อเว็บไซต์หน้า Home"></div>
+                            <div><label>ชื่อเว็บมุมขวาบน</label><input id="set-top-right-name" placeholder="ชื่อที่จะโชว์มุมขวาบน"></div>
+                        </div>
+                        <input id="set-logo-url" placeholder="URL รูปโลโก้">
+                        <h3 style="margin-top:20px;">2. จัดการ QR Code เติมเงิน (Scan Bill)</h3>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                            <div><label>URL รูป QR Code (1:1)</label><input id="set-qr-url" placeholder="URL รูปภาพ QR Code"></div>
+                            <div><label>Link ตรวจสอบยอด (ถ้ามี)</label><input id="set-qr-link" placeholder="ลิงก์สำหรับแสกนบิล"></div>
+                        </div>
+                        <h3 style="margin-top:20px;">3. ข้อความประกาศตัววิ่ง (Marquee)</h3>
+                        <input id="set-marquee-text" placeholder="ใส่ข้อความที่จะให้วิ่งบนหน้าเว็บ">
+                        <h3 style="margin-top:20px;">4. สีพื้นหลัง (Admin Panel Only)</h3>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+                            <div><label>สีหลัก</label><input type="color" id="set-color-1"></div>
+                            <div><label>สีตัด</label><input type="color" id="set-color-2"></div>
+                        </div>
+                        <h3 style="margin-top:20px;">5. Banner Slideshow & Links</h3>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                            <input id="set-b-0" placeholder="Banner 1 (URL)">
+                            <input id="set-l-0" placeholder="Link สำหรับ Banner 1">
+                            <input id="set-b-1" placeholder="Banner 2 (URL)">
+                            <input id="set-l-1" placeholder="Link สำหรับ Banner 2">
+                            <input id="set-b-2" placeholder="Banner 3 (URL)">
+                            <input id="set-l-2" placeholder="Link สำหรับ Banner 3">
+                            <input id="set-b-3" placeholder="Banner 4 (URL)">
+                            <input id="set-l-3" placeholder="Link สำหรับ Banner 4">
+                        </div>
+                        <button onclick="saveCustomSettings()" class="btn btn-success" style="width:100%; margin-top:25px;">💾 บันทึกการปรับแต่งทั้งหมด</button>
                     </div>
                 </div>
 
@@ -508,7 +509,8 @@
                             <div><label>รางวัลที่ 7</label><input id="w-item-6"></div>
                             <div><label>รางวัลที่ 8</label><input id="w-item-7"></div>
                         </div>
-                        <button class="btn btn-success" style="width:100%; margin-top:20px;" onclick="saveWheelSettings()">💾 บันทึกการตั้งค่ารางวัล</button>
+                        <p style="color:#888; font-size:0.85rem; margin-top:10px;">*รางวัลที่ 1 จะอยู่ด้านบนสุดและวนตามเข็มนาฬิกา</p>
+                        <button onclick="saveWheelItems()" class="btn btn-primary" style="width:100%; margin-top:15px;">💾 บันทึกชื่อรางวัล</button>
                     </div>
                 </div>
 
@@ -519,17 +521,17 @@
                     </div>
                     <div class="card">
                         <table>
-                            <thead><tr><th>รหัสโค้ด</th><th>สิทธิ์วงล้อที่จะได้รับ</th><th>คงเหลือ (ครั้ง)</th><th>จัดการ</th></tr></thead>
+                            <thead><tr><th>รหัสโค้ด</th><th>จำนวนสิทธิ์วงล้อ</th><th>คงเหลือ (สต็อก)</th><th>ลบ</th></tr></thead>
                             <tbody id="list-admin-codes"></tbody>
                         </table>
                     </div>
                 </div>
 
                 <div id="a-history" class="a-page hidden">
-                    <h2>📜 ประวัติการทำรายการทั้งหมด</h2>
+                    <h2>📜 ประวัติการทำรายการทั้งหมดในระบบ</h2>
                     <div class="card">
                         <table>
-                            <thead><tr><th>วัน-เวลา</th><th>ผู้ใช้</th><th>รายการ</th><th>ข้อมูล</th></tr></thead>
+                            <thead><tr><th>วัน-เวลา</th><th>ชื่อผู้ใช้</th><th>รายการ</th><th>รายละเอียด</th></tr></thead>
                             <tbody id="list-admin-global-hist"></tbody>
                         </table>
                     </div>
@@ -538,219 +540,188 @@
         </div>
     </div>
 
-    <div id="admin-view-slip-modal" class="modal-overlay">
-        <div class="modal-box">
-            <h3>🖼️ สลิปการโอนเงิน</h3>
-            <img id="slip-preview-img" style="max-width:100%; border-radius:10px; margin:15px 0;">
-            <button onclick="closeModal('admin-view-slip-modal')" class="btn btn-danger" style="width:100%;">ปิด</button>
-        </div>
-    </div>
-
     <script>
         let currentUser = null;
-        let isSpinning = false;
         let currentBannerIndex = 0;
+        let isSpinning = false;
+        let editTargetIndex = null;
 
-        // --- Data & Initialization ---
+        // --- Core Data Initialization ---
         function initData() {
-            if(!localStorage.getItem('my_users')) {
-                localStorage.setItem('my_users', JSON.stringify([
-                    { username: 'admin', password: 'adminqweasdzxc', credit: 999999, wheel: 999, history: [], joinDate: new Date().toLocaleString(), role: 'admin', ip: '127.0.0.1' }
-                ]));
-            }
-            if(!localStorage.getItem('my_cats')) localStorage.setItem('my_cats', JSON.stringify([]));
+            if(!localStorage.getItem('my_users')) localStorage.setItem('my_users', JSON.stringify([{username:'admin',password:'admin',credit:9999,wheel:99,ip:'127.0.0.1',join:new Date().toLocaleString(),history:[]}]));
+            if(!localStorage.getItem('my_cats')) localStorage.setItem('my_cats', JSON.stringify([{name:'หมวดหมู่แนะนำ',img:'https://via.placeholder.com/300'}]));
             if(!localStorage.getItem('my_prods')) localStorage.setItem('my_prods', JSON.stringify([]));
+            if(!localStorage.getItem('web_settings')) localStorage.setItem('web_settings', JSON.stringify({
+                name: 'Ultimate Shop',
+                topName: 'SHOP-V21',
+                logo: 'https://cdn-icons-png.flaticon.com/512/3081/3081840.png',
+                qr: 'https://via.placeholder.com/200',
+                qr_link: '#',
+                marquee: 'ยินดีต้อนรับสู่ระบบ Ultimate System v21.0 ระบบที่ปรับแต่งได้ทุกส่วนด้วยตัวคุณเอง!',
+                banners: ['https://via.placeholder.com/1000x350/222','https://via.placeholder.com/1000x350/333','https://via.placeholder.com/1000x350/444','https://via.placeholder.com/1000x350/555'],
+                links: ['#','#','#','#'],
+                colors: ['#5865F2','#ffffff']
+            }));
+            if(!localStorage.getItem('my_wheel')) localStorage.setItem('my_wheel', JSON.stringify(['ขอบคุณที่ร่วมสนุก','1 เครดิต','5 เครดิต','เกลือ','สิทธิ์หมุนฟรี','10 เครดิต','โชคดีนะ','แจ็คพอต!']));
             if(!localStorage.getItem('my_queue')) localStorage.setItem('my_queue', JSON.stringify([]));
-            if(!localStorage.getItem('my_withdraw_queue')) localStorage.setItem('my_withdraw_queue', JSON.stringify([]));
             if(!localStorage.getItem('my_codes')) localStorage.setItem('my_codes', JSON.stringify([]));
-            if(!localStorage.getItem('wheel_items')) localStorage.setItem('wheel_items', JSON.stringify(['10 Credit', '5 Credit', 'เกือบได้', '30 Credit', '2 Credit', '100 Credit', 'ลองใหม่นะ', '50 Credit']));
+            if(!localStorage.getItem('my_withdraw')) localStorage.setItem('my_withdraw', JSON.stringify([]));
             
-            if(!localStorage.getItem('web_settings')) {
-                localStorage.setItem('web_settings', JSON.stringify({
-                    webName: "ULTIMATE SHOP",
-                    topRightName: "PREMIUM",
-                    logoUrl: "https://cdn-icons-png.flaticon.com/512/3064/3064155.png",
-                    qrUrl: "https://pic.in.th/image/qr-demo.png",
-                    qrLink: "#",
-                    marqueeText: "ยินดีต้อนรับสู่ระบบ Ultimate System v21.0 ระบบที่ครบวงจรที่สุด!",
-                    color1: "#5865F2", color2: "#ffffff",
-                    banners: ["https://img2.pic.in.th/pic/banner1.jpg", "https://img2.pic.in.th/pic/banner2.jpg", "https://img2.pic.in.th/pic/banner3.jpg", "https://img2.pic.in.th/pic/banner4.jpg"],
-                    links: ["#", "#", "#", "#"]
-                }));
-            }
-            loadWebSettings();
-            checkSession(); // ฟังก์ชันใหม่: ตรวจสอบ Session เมื่อโหลดหน้า 
+            checkSession(); // เพิ่มการตรวจสอบ Session เมื่อเริ่มต้น
+            applySettings();
         }
 
-        function loadWebSettings() {
-            const s = JSON.parse(localStorage.getItem('web_settings'));
-            document.getElementById('auth-logo').src = s.logoUrl;
-            document.getElementById('user-nav-logo').src = s.logoUrl;
-            document.getElementById('admin-nav-logo').src = s.logoUrl;
-            document.getElementById('home-web-name').innerText = s.webName;
-            document.getElementById('nav-top-right-name').innerText = s.topRightName;
-            document.getElementById('admin-qr-preview').src = s.qrUrl;
-            document.getElementById('web-marquee-text').innerText = s.marqueeText;
-
-            // Load to inputs
-            document.getElementById('set-web-name').value = s.webName;
-            document.getElementById('set-top-right-name').value = s.topRightName;
-            document.getElementById('set-logo-url').value = s.logoUrl;
-            document.getElementById('set-qr-url').value = s.qrUrl;
-            document.getElementById('set-qr-link').value = s.qrLink;
-            document.getElementById('set-marquee-text').value = s.marqueeText;
-            document.getElementById('set-color-1').value = s.color1;
-            document.getElementById('set-color-2').value = s.color2;
-
-            for(let i=0; i<4; i++) {
-                document.getElementById(`set-b-${i}`).value = s.banners[i];
-                document.getElementById(`set-l-${i}`).value = s.links[i];
-                document.getElementById(`b-${i}`).style.backgroundImage = `url(${s.banners[i]})`;
-            }
-
-            const wheelItems = JSON.parse(localStorage.getItem('wheel_items'));
-            wheelItems.forEach((val, i) => document.getElementById(`w-item-${i}`).value = val);
-        }
-
-        // --- Session System (ฟังก์ชันที่เพิ่มเข้ามาใหม่) ---
+        // --- NEW: Session System ---
         function checkSession() {
-            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-            const savedUsername = sessionStorage.getItem('username');
-            
-            if(isLoggedIn === 'true' && savedUsername) {
+            const savedUser = sessionStorage.getItem('logged_in_user');
+            if (savedUser) {
                 const users = JSON.parse(localStorage.getItem('my_users'));
-                const user = users.find(x => x.username === savedUsername);
-                if(user) {
-                    startApp(user);
+                const user = users.find(u => u.username === savedUser);
+                if (user) {
+                    currentUser = user;
+                    showMainSystem();
                 }
             }
         }
 
-        // --- Auth System (ปรับปรุงเพิ่ม Session) ---
+        function showMainSystem() {
+            document.getElementById('auth-section').classList.add('hidden');
+            if(currentUser.username === 'admin') {
+                document.getElementById('admin-section').style.display = 'block';
+                renderAdminUsers();
+                renderAdminQueue();
+                renderAdminWithdraw();
+            } else {
+                document.getElementById('user-section').style.display = 'block';
+                updateUserUI();
+            }
+        }
+
+        // --- Auth Functions ---
+        function toggleAuth() {
+            document.getElementById('login-form').classList.toggle('hidden');
+            document.getElementById('reg-form').classList.toggle('hidden');
+        }
+
+        function validateUsernameInput(input) {
+            const regex = /^[a-zA-Z0-9]*$/;
+            const msg = document.getElementById('reg-user-msg');
+            if(!regex.test(input.value)) {
+                msg.textContent = "❌ ต้องเป็นภาษาอังกฤษหรือตัวเลขเท่านั้น";
+                msg.style.color = "var(--danger)";
+                document.getElementById('reg-submit-btn').disabled = true;
+            } else {
+                msg.textContent = "";
+                document.getElementById('reg-submit-btn').disabled = false;
+            }
+        }
+
         function login() {
             const u = document.getElementById('l-user').value;
             const p = document.getElementById('l-pass').value;
-            if(!u || !p) return alertMsg('เตือน', 'กรุณากรอกข้อมูลให้ครบ', '⚠️');
-
             const users = JSON.parse(localStorage.getItem('my_users'));
             const user = users.find(x => x.username === u && x.password === p);
 
             if(user) {
-                // บันทึก Session เพื่อให้ Refresh แล้วไม่หลุด 
-                sessionStorage.setItem('isLoggedIn', 'true');
-                sessionStorage.setItem('username', user.username);
-                
-                startApp(user);
-                alertMsg('สำเร็จ', 'ยินดีต้อนรับเข้าสู่ระบบ', '🎉');
+                currentUser = user;
+                sessionStorage.setItem('logged_in_user', u); // บันทึก Session
+                showMainSystem();
+                showNoti('success', 'สำเร็จ!', 'ยินดีต้อนรับเข้าสู่ระบบ');
             } else {
-                alertMsg('ผิดพลาด', 'ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง', '❌');
-            }
-        }
-
-        function logout() {
-            sessionStorage.clear(); // ล้าง Session ทั้งหมดเมื่อ Logout 
-            location.reload();
-        }
-
-        function startApp(user) {
-            currentUser = user;
-            document.getElementById('auth-section').style.display = 'none';
-            if(user.role === 'admin') {
-                document.getElementById('admin-section').style.display = 'block';
-                renderAdminUsers();
-                renderAdminQueue();
-                renderAdminWithdrawQueue();
-            } else {
-                document.getElementById('user-section').style.display = 'block';
-                document.getElementById('display-name').innerText = user.username;
-                updateUserUI();
-                renderUserCats();
+                showNoti('danger', 'ผิดพลาด', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
             }
         }
 
         function register() {
             const u = document.getElementById('r-user').value;
             const p = document.getElementById('r-pass').value;
-            if(!u || !p) return alertMsg('เตือน', 'กรุณากรอกข้อมูลให้ครบ', '⚠️');
-            if(!/^[a-zA-Z0-9]+$/.test(u)) return alertMsg('เตือน', 'ชื่อผู้ใช้ต้องเป็นอังกฤษ/ตัวเลขเท่านั้น', '⚠️');
-
+            if(u.length < 4 || p.length < 4) return showNoti('warning', 'แจ้งเตือน', 'กรุณากรอกข้อมูล 4 ตัวอักษรขึ้นไป');
+            
             let users = JSON.parse(localStorage.getItem('my_users'));
-            if(users.find(x => x.username === u)) return alertMsg('ผิดพลาด', 'ชื่อผู้ใช้งานนี้ถูกใช้ไปแล้ว', '⚠️');
+            if(users.some(x => x.username === u)) return showNoti('danger', 'ผิดพลาด', 'มีชื่อผู้ใช้งานนี้อยู่ในระบบแล้ว');
 
-            users.push({
+            const newUser = {
                 username: u, password: p, credit: 0, wheel: 0,
-                history: [], joinDate: new Date().toLocaleString(),
-                role: 'user', ip: '127.0.0.1'
-            });
+                ip: '127.0.0.1', join: new Date().toLocaleString(), history: []
+            };
+            users.push(newUser);
             localStorage.setItem('my_users', JSON.stringify(users));
-            alertMsg('สำเร็จ', 'สมัครสมาชิกเรียบร้อยแล้ว', '✅');
+            showNoti('success', 'สำเร็จ!', 'สมัครสมาชิกเรียบร้อย ล็อกอินได้เลย');
             toggleAuth();
         }
 
-        function validateUsernameInput(el) {
-            const msg = document.getElementById('reg-user-msg');
-            const btn = document.getElementById('reg-submit-btn');
-            if(!/^[a-zA-Z0-9]+$/.test(el.value)) {
-                msg.innerText = "❌ ภาษาอังกฤษและตัวเลขเท่านั้น";
-                msg.style.color = "var(--danger)";
-                btn.disabled = true;
-                btn.style.opacity = "0.5";
-            } else {
-                msg.innerText = "✅ รูปแบบถูกต้อง";
-                msg.style.color = "var(--success)";
-                btn.disabled = false;
-                btn.style.opacity = "1";
-            }
+        function logout() {
+            sessionStorage.removeItem('logged_in_user'); // ลบ Session
+            location.reload();
         }
 
-        // --- User Pages & UI ---
-        function switchUserPage(pid, el) {
-            document.querySelectorAll('.u-page').forEach(p => p.classList.add('hidden'));
-            document.getElementById(pid).classList.remove('hidden');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            if(pid === 'u-history') renderUserHistory();
-            if(pid === 'u-wheel') initWheel();
-        }
-
+        // --- User UI & Navigation ---
         function updateUserUI() {
             document.getElementById('u-credit').innerText = currentUser.credit.toLocaleString();
             document.getElementById('u-wheel-cnt').innerText = currentUser.wheel;
+            document.getElementById('display-name').innerText = currentUser.username;
+            document.getElementById('nav-top-right-name').innerText = JSON.parse(localStorage.getItem('web_settings')).topName;
             document.getElementById('wheel-text').innerText = currentUser.wheel;
+            renderUserHistory();
+            renderShopCats();
+            drawWheel();
         }
 
-        function renderUserCats() {
+        function switchUserPage(pageId, btn) {
+            document.querySelectorAll('.u-page').forEach(p => p.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+        }
+
+        function renderUserHistory() {
+            document.getElementById('list-user-hist').innerHTML = currentUser.history.slice(-20).reverse().map(h => `
+                <tr><td>${h.time}</td><td>${h.action}</td><td>${h.detail}</td></tr>
+            `).join('');
+        }
+
+        // --- Modal System ---
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+        function showNoti(type, title, desc) {
+            const icons = { success:'🎉', danger:'❌', warning:'⚠️' };
+            document.getElementById('alert-icon').innerText = icons[type];
+            document.getElementById('alert-t').innerText = title;
+            document.getElementById('alert-c').innerText = desc;
+            openModal('alert-modal');
+        }
+
+        // --- Shop System ---
+        function renderShopCats() {
             const cats = JSON.parse(localStorage.getItem('my_cats'));
-            document.getElementById('shop-cat-list').innerHTML = cats.map(c => `
-                <div class="item-card" onclick="showCatProds('${c.name}')">
+            document.getElementById('shop-cat-list').innerHTML = cats.map((c, i) => `
+                <div class="item-card" onclick="openCat(${i})">
                     <img src="${c.img}" class="item-img">
-                    <div style="padding:15px; text-align:center;">
-                        <h3 style="margin:0;">${c.name}</h3>
-                    </div>
+                    <div style="padding:15px; text-align:center;"><h4>${c.name}</h4></div>
                 </div>
             `).join('');
         }
 
-        function showCatProds(catName) {
+        function openCat(i) {
+            const cats = JSON.parse(localStorage.getItem('my_cats'));
+            const prods = JSON.parse(localStorage.getItem('my_prods'));
+            const filtered = prods.filter(p => p.cat === cats[i].name);
+            document.getElementById('current-cat-name').innerText = cats[i].name;
             document.getElementById('shop-cat-view').classList.add('hidden');
             document.getElementById('shop-prod-view').classList.remove('hidden');
-            document.getElementById('current-cat-name').innerText = "สินค้าในหมวด: " + catName;
-            
-            const allProds = JSON.parse(localStorage.getItem('my_prods'));
-            const filtered = allProds.filter(p => p.cat === catName);
-            
-            document.getElementById('shop-prod-list').innerHTML = filtered.map(p => `
-                <div class="item-card" onclick="openBuyModal('${p.name}', ${p.price}, '${p.id}')">
+            document.getElementById('shop-prod-list').innerHTML = filtered.length ? filtered.map((p, idx) => `
+                <div class="item-card">
                     <img src="${p.img}" class="item-img">
                     <div style="padding:15px;">
-                        <h4 style="margin:0;">${p.name}</h4>
+                        <h4>${p.name}</h4>
+                        <p style="color:#888; font-size:0.8rem;">คงเหลือ: ${p.stock}</p>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
-                            <span style="color:var(--warning); font-weight:600;">🪙 ${p.price}</span>
-                            <span style="font-size:0.8rem; color:#888;">สต็อก: ${p.keys.length}</span>
+                            <span style="color:var(--warning); font-weight:bold;">🪙 ${p.price}</span>
+                            <button onclick="confirmBuy('${p.name}', ${p.price})" class="btn btn-primary" style="padding:5px 15px;">ซื้อ</button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `).join('') : '<p style="text-align:center; color:#666;">ยังไม่มีสินค้าในหมวดนี้</p>';
         }
 
         function backToCats() {
@@ -758,222 +729,188 @@
             document.getElementById('shop-prod-view').classList.add('hidden');
         }
 
-        // --- Purchase System ---
-        function openBuyModal(name, price, id) {
-            document.getElementById('buy-desc').innerText = `คุณต้องการซื้อ "${name}" ในราคา ${price} เครดิต ใช่หรือไม่?`;
-            document.getElementById('confirm-buy-btn').onclick = () => processBuy(id);
+        function confirmBuy(name, price) {
+            document.getElementById('buy-desc').innerText = `คุณแน่ใจหรือไม่ที่จะซื้อ "${name}" ในราคา ${price} เครดิต?`;
+            document.getElementById('confirm-buy-btn').onclick = () => processBuy(name, price);
             openModal('buy-modal');
         }
 
-        function processBuy(pid) {
-            const prods = JSON.parse(localStorage.getItem('my_prods'));
-            const pIdx = prods.findIndex(x => x.id === pid);
-            const p = prods[pIdx];
+        function processBuy(name, price) {
+            if(currentUser.credit < price) {
+                closeModal('buy-modal');
+                return showNoti('danger', 'เครดิตไม่พอ', 'กรุณาเติมเงินก่อนทำรายการ');
+            }
 
-            if(currentUser.credit < p.price) return alertMsg('ล้มเหลว', 'เครดิตของคุณไม่เพียงพอ', '❌');
-            if(p.keys.length === 0) return alertMsg('ล้มเหลว', 'สินค้าหมดชั่วคราว', '⚠️');
+            let prods = JSON.parse(localStorage.getItem('my_prods'));
+            let pIdx = prods.findIndex(x => x.name === name);
+            if(prods[pIdx].stock <= 0) {
+                closeModal('buy-modal');
+                return showNoti('danger', 'สินค้าหมด', 'ขออภัย สินค้านี้หมดชั่วคราว');
+            }
 
-            const key = p.keys.shift();
-            currentUser.credit -= p.price;
-            currentUser.history.unshift({ time: new Date().toLocaleString(), action: 'ซื้อสินค้า', detail: `${p.name} (Key: ${key})` });
-
+            prods[pIdx].stock--;
+            currentUser.credit -= price;
+            const key = "KEY-" + Math.random().toString(36).substr(2, 9).toUpperCase();
+            currentUser.history.push({ time: new Date().toLocaleString(), action: 'ซื้อสินค้า', detail: `${name} | คีย์: ${key}` });
+            
+            syncUser();
             localStorage.setItem('my_prods', JSON.stringify(prods));
-            updateUserDataGlobally();
             closeModal('buy-modal');
-            alertMsg('สำเร็จ!', `คุณได้รับสินค้า: ${key}`, '🎁');
+            showNoti('success', 'ซื้อสำเร็จ!', `คุณได้รับสินค้าแล้ว ตรวจสอบคีย์ได้ที่หน้าประวัติ <br><b style="color:white; background:#000; padding:5px;">${key}</b>`);
             updateUserUI();
-            showCatProds(p.cat);
+            openCat(JSON.parse(localStorage.getItem('my_cats')).findIndex(c => c.name === prods[pIdx].cat));
         }
 
-        // --- Topup System ---
-        function nextToQR() {
-            const amt = document.getElementById('topup-amount-input').value;
-            if(!amt || amt <= 0) return alertMsg('เตือน', 'กรุณาระบุจำนวนเงินที่ถูกต้อง', '⚠️');
-            document.getElementById('topup-step-1').classList.add('hidden');
-            document.getElementById('topup-step-2').classList.remove('hidden');
+        // --- Wheel System ---
+        function drawWheel() {
+            const canvas = document.getElementById('wheel-canvas');
+            const ctx = canvas.getContext('2d');
+            const items = JSON.parse(localStorage.getItem('my_wheel'));
+            const colors = ['#1a1a1a', '#222', '#2a2a2a', '#333', '#1a1a1a', '#222', '#2a2a2a', '#333'];
+
+            ctx.clearRect(0, 0, 300, 300);
+            for(let i=0; i<8; i++) {
+                ctx.beginPath();
+                ctx.moveTo(150, 150);
+                ctx.arc(150, 150, 140, i * Math.PI/4, (i+1) * Math.PI/4);
+                ctx.fillStyle = colors[i];
+                ctx.fill();
+                ctx.save();
+                ctx.translate(150, 150);
+                ctx.rotate(i * Math.PI/4 + Math.PI/8);
+                ctx.fillStyle = "white";
+                ctx.font = "10px Kanit";
+                ctx.fillText(items[i], 60, 5);
+                ctx.restore();
+            }
         }
 
-        function submitTopup() {
-            const amt = document.getElementById('topup-amount-input').value;
-            const fileInput = document.getElementById('topup-slip-file');
-            if(!fileInput.files[0]) return alertMsg('เตือน', 'กรุณาแนบรูปภาพสลิป', '⚠️');
+        function spinWheel() {
+            if(isSpinning) return;
+            if(currentUser.wheel <= 0) return showNoti('warning', 'สิทธิ์หมด', 'กรุณาเติมโค้ดหรือรอโปรโมชั่นเพื่อรับสิทธิ์');
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                let queue = JSON.parse(localStorage.getItem('my_queue'));
-                queue.push({
-                    user: currentUser.username,
-                    amount: parseInt(amt),
-                    time: new Date().toLocaleString(),
-                    slip: e.target.result,
-                    status: 'pending'
-                });
-                localStorage.setItem('my_queue', JSON.stringify(queue));
-                alertMsg('ส่งเรื่องแล้ว', 'กรุณารอแอดมินตรวจสอบสลิปของท่าน', '⏳');
-                closeModal('topup-modal');
-                // Reset form
-                document.getElementById('topup-step-1').classList.remove('hidden');
-                document.getElementById('topup-step-2').classList.add('hidden');
-                document.getElementById('topup-amount-input').value = "";
-                document.getElementById('topup-slip-file').value = "";
-            };
-            reader.readAsDataURL(fileInput.files[0]);
-        }
-
-        // --- Withdraw System ---
-        function confirmWithdraw() {
-            const amt = document.getElementById('withdraw-amount').value;
-            const bank = document.getElementById('withdraw-bank').value;
-            const acc = document.getElementById('withdraw-account').value;
-
-            if(!amt || amt < 50) return alertMsg('เตือน', 'ขั้นต่ำการถอนคือ 50 เครดิต', '⚠️');
-            if(!bank || !acc) return alertMsg('เตือน', 'กรุณากรอกข้อมูลธนาคารให้ครบ', '⚠️');
-            if(currentUser.credit < amt) return alertMsg('ล้มเหลว', 'เครดิตไม่เพียงพอ', '❌');
-
-            document.getElementById('withdraw-confirm-text').innerHTML = `<b>ยอดถอน:</b> ${amt} เครดิต<br><b>ธนาคาร:</b> ${bank}<br><b>เลขบัญชี:</b> ${acc}`;
-            openModal('confirm-withdraw-modal');
-        }
-
-        function submitWithdraw() {
-            const amt = parseInt(document.getElementById('withdraw-amount').value);
-            const bank = document.getElementById('withdraw-bank').value;
-            const acc = document.getElementById('withdraw-account').value;
-
-            let wQueue = JSON.parse(localStorage.getItem('my_withdraw_queue'));
-            wQueue.push({
-                user: currentUser.username,
-                amount: amt,
-                info: `${bank} / ${acc}`,
-                time: new Date().toLocaleString(),
-                status: 'pending'
-            });
-            localStorage.setItem('my_withdraw_queue', JSON.stringify(wQueue));
-
-            currentUser.credit -= amt;
-            currentUser.history.unshift({ time: new Date().toLocaleString(), action: 'ถอนเงิน', detail: `แจ้งถอน ${amt} เครดิต (${bank})` });
-            updateUserDataGlobally();
+            isSpinning = true;
+            currentUser.wheel--;
             updateUserUI();
             
-            closeModal('confirm-withdraw-modal');
-            closeModal('withdraw-modal');
-            alertMsg('สำเร็จ', 'ระบบได้รับเรื่องการถอนแล้ว กรุณารอดำเนินการ', '✅');
+            const rand = Math.floor(Math.random() * 8);
+            const deg = (360 * 5) + (rand * 45);
+            const canvas = document.getElementById('wheel-canvas');
+            canvas.style.transform = `rotate(-${deg}deg)`;
+
+            setTimeout(() => {
+                isSpinning = false;
+                const items = JSON.parse(localStorage.getItem('my_wheel'));
+                const result = items[rand];
+                showNoti('success', 'ยินดีด้วย!', `คุณได้รับ: ${result}`);
+                currentUser.history.push({ time: new Date().toLocaleString(), action: 'วงล้อ', detail: `ได้รับ ${result}` });
+                syncUser();
+                updateUserUI();
+                canvas.style.transition = 'none';
+                canvas.style.transform = `rotate(-${rand * 45}deg)`;
+                setTimeout(() => canvas.style.transition = 'transform 4s cubic-bezier(0.15, 0, 0.15, 1)', 50);
+            }, 4000);
         }
 
-        // --- Redeem Code ---
+        // --- Redeem System ---
         function useRedeemCode() {
             const input = document.getElementById('redeem-input').value;
             let codes = JSON.parse(localStorage.getItem('my_codes'));
             const cIdx = codes.findIndex(x => x.code === input);
 
-            if(cIdx === -1) return alertMsg('ผิดพลาด', 'ไม่พบโค้ดนี้ในระบบ', '❌');
-            if(codes[cIdx].stock <= 0) return alertMsg('ผิดพลาด', 'โค้ดนี้ถูกใช้งานจนหมดแล้ว', '⚠️');
+            if(cIdx === -1) return showNoti('danger', 'ไม่พบโค้ด', 'กรุณาตรวจสอบรหัสอีกครั้ง');
+            if(codes[cIdx].stock <= 0) return showNoti('warning', 'โค้ดหมด', 'โค้ดนี้ถูกใช้งานครบจำนวนแล้ว');
 
             codes[cIdx].stock--;
             currentUser.wheel += codes[cIdx].reward;
-            currentUser.history.unshift({ time: new Date().toLocaleString(), action: 'ใช้โค้ด', detail: `รับสิทธิ์วงล้อ ${codes[cIdx].reward} ครั้ง (Code: ${input})` });
+            currentUser.history.push({ time: new Date().toLocaleString(), action: 'ใช้โค้ด', detail: `โค้ด: ${input} (+${codes[cIdx].reward} สิทธิ์)` });
             
             localStorage.setItem('my_codes', JSON.stringify(codes));
-            updateUserDataGlobally();
+            syncUser();
             updateUserUI();
             document.getElementById('redeem-input').value = "";
-            alertMsg('ยินดีด้วย!', `คุณได้รับสิทธิ์หมุนวงล้อ ${codes[cIdx].reward} ครั้ง`, '🎁');
+            showNoti('success', 'ยินดีด้วย!', `คุณได้รับสิทธิ์หมุนวงล้อ ${codes[cIdx].reward} ครั้ง`);
         }
 
-        // --- Wheel System ---
-        function initWheel() {
-            const canvas = document.getElementById('wheel-canvas');
-            const ctx = canvas.getContext('2d');
-            const items = JSON.parse(localStorage.getItem('wheel_items'));
-            const colors = ['#5865F2', '#2c2f33', '#5865F2', '#2c2f33', '#5865F2', '#2c2f33', '#5865F2', '#2c2f33'];
-            
-            ctx.clearRect(0,0,300,300);
-            items.forEach((item, i) => {
-                const angle = (2 * Math.PI) / 8;
-                ctx.beginPath();
-                ctx.fillStyle = colors[i];
-                ctx.moveTo(150, 150);
-                ctx.arc(150, 150, 140, i * angle, (i+1) * angle);
-                ctx.fill();
-                ctx.save();
-                ctx.translate(150, 150);
-                ctx.rotate(i * angle + angle / 2);
-                ctx.fillStyle = "white";
-                ctx.font = "bold 12px Kanit";
-                ctx.fillText(item, 50, 5);
-                ctx.restore();
-            });
+        // --- Topup & Withdraw ---
+        function nextToQR() {
+            const amount = document.getElementById('topup-amount-input').value;
+            if(!amount || amount < 1) return alert('กรุณาระบุจำนวนเงิน');
+            document.getElementById('topup-step-1').classList.add('hidden');
+            document.getElementById('topup-step-2').classList.remove('hidden');
         }
 
-        function spinWheel() {
-            if(isSpinning) return;
-            if(currentUser.wheel <= 0) return alertMsg('เตือน', 'คุณไม่มีสิทธิ์หมุนวงล้อ', '⚠️');
+        function submitTopup() {
+            const amount = document.getElementById('topup-amount-input').value;
+            const slip = document.getElementById('topup-slip-file').files[0];
+            if(!slip) return alert('กรุณาแนบสลิป');
 
-            isSpinning = true;
-            currentUser.wheel--;
+            let queue = JSON.parse(localStorage.getItem('my_queue'));
+            queue.push({ user: currentUser.username, amount: parseInt(amount), time: new Date().toLocaleString(), status: 'pending' });
+            localStorage.setItem('my_queue', JSON.stringify(queue));
+
+            closeModal('topup-modal');
+            showNoti('success', 'ส่งข้อมูลแล้ว', 'เจ้าหน้าที่กำลังตรวจสอบรายการของคุณ');
+            document.getElementById('topup-step-1').classList.remove('hidden');
+            document.getElementById('topup-step-2').classList.add('hidden');
+        }
+
+        function confirmWithdraw() {
+            const amount = document.getElementById('withdraw-amount').value;
+            const bank = document.getElementById('withdraw-bank').value;
+            const acc = document.getElementById('withdraw-account').value;
+
+            if(!amount || !bank || !acc) return alert('กรุณากรอกข้อมูลให้ครบ');
+            if(amount < 100) return alert('ถอนขั้นต่ำ 100 เครดิต');
+            if(currentUser.credit < amount) return alert('เครดิตไม่เพียงพอ');
+
+            document.getElementById('withdraw-confirm-text').innerHTML = `<b>ยอดถอน:</b> ${amount} เครดิต<br><b>ธนาคาร:</b> ${bank}<br><b>เลขบัญชี:</b> ${acc}`;
+            openModal('confirm-withdraw-modal');
+        }
+
+        function submitWithdraw() {
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            const bank = document.getElementById('withdraw-bank').value;
+            const acc = document.getElementById('withdraw-account').value;
+
+            currentUser.credit -= amount;
+            let withdraws = JSON.parse(localStorage.getItem('my_withdraw'));
+            withdraws.push({ user: currentUser.username, amount, bank, acc, time: new Date().toLocaleString(), status: 'pending' });
+            localStorage.setItem('my_withdraw', JSON.stringify(withdraws));
+
+            currentUser.history.push({ time: new Date().toLocaleString(), action: 'ถอนเงิน', detail: `จำนวน ${amount} (รอดำเนินการ)` });
+            syncUser();
             updateUserUI();
-
-            const canvas = document.getElementById('wheel-canvas');
-            const randDeg = Math.floor(Math.random() * 360) + 3600; 
-            canvas.style.transform = `rotate(${randDeg}deg)`;
-
-            setTimeout(() => {
-                isSpinning = false;
-                const actualDeg = randDeg % 360;
-                const itemIdx = 7 - Math.floor(actualDeg / 45);
-                const items = JSON.parse(localStorage.getItem('wheel_items'));
-                const result = items[itemIdx];
-
-                if(result.includes('Credit')) {
-                    const amt = parseInt(result);
-                    currentUser.credit += amt;
-                    alertMsg('ยินดีด้วย!', `คุณได้รับ ${amt} เครดิต!`, '🎉');
-                } else {
-                    alertMsg('เสียใจด้วย', result, '😅');
-                }
-
-                currentUser.history.unshift({ time: new Date().toLocaleString(), action: 'หมุนวงล้อ', detail: `ผลลัพธ์: ${result}` });
-                updateUserDataGlobally();
-                updateUserUI();
-            }, 4000);
+            closeModal('confirm-withdraw-modal');
+            closeModal('withdraw-modal');
+            showNoti('success', 'ส่งคำขอแล้ว', 'ระบบกำลังดำเนินการถอนเงินให้ท่าน');
         }
 
-        // --- User Profile & Security ---
-        function openChangePassword() {
-            document.getElementById('cp-old').value = "";
-            document.getElementById('cp-new').value = "";
-            document.getElementById('cp-confirm').value = "";
-            openModal('change-pass-modal');
-        }
+        // --- Settings & Password ---
+        function toggleSettingsMenu() { document.getElementById('settings-menu').classList.toggle('active'); }
+        function openChangePassword() { toggleSettingsMenu(); openModal('change-pass-modal'); }
 
         function confirmChangePassword() {
-            const old = document.getElementById('cp-old').value;
-            const n1 = document.getElementById('cp-new').value;
-            const n2 = document.getElementById('cp-confirm').value;
+            const oldP = document.getElementById('cp-old').value;
+            const newP = document.getElementById('cp-new').value;
+            const conP = document.getElementById('cp-confirm').value;
 
-            if(old !== currentUser.password) return alertMsg('ผิดพลาด', 'รหัสผ่านปัจจุบันไม่ถูกต้อง', '❌');
-            if(n1.length < 4) return alertMsg('ผิดพลาด', 'รหัสผ่านใหม่ต้องมี 4 ตัวขึ้นไป', '⚠️');
-            if(n1 !== n2) return alertMsg('ผิดพลาด', 'ยืนยันรหัสผ่านใหม่ไม่ตรงกัน', '⚠️');
+            if(oldP !== currentUser.password) return alert('รหัสผ่านเดิมไม่ถูกต้อง');
+            if(newP !== conP) return alert('รหัสผ่านใหม่ไม่ตรงกัน');
+            if(newP.length < 4) return alert('รหัสใหม่ต้อง 4 ตัวขึ้นไป');
 
-            currentUser.password = n1;
-            updateUserDataGlobally();
-            alertMsg('สำเร็จ', 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว', '✅');
+            currentUser.password = newP;
+            syncUser();
             closeModal('change-pass-modal');
+            showNoti('success', 'สำเร็จ', 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว');
         }
 
         // --- Admin Functions ---
-        function switchAdminPage(pid, el) {
+        function switchAdminPage(id, btn) {
             document.querySelectorAll('.a-page').forEach(p => p.classList.add('hidden'));
-            document.getElementById(pid).classList.remove('hidden');
+            document.getElementById(id).classList.remove('hidden');
             document.querySelectorAll('.side-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            
-            if(pid === 'a-users') renderAdminUsers();
-            if(pid === 'a-topup-queue') renderAdminQueue();
-            if(pid === 'a-withdraw-queue') renderAdminWithdrawQueue();
-            if(pid === 'a-cats') renderAdminCats();
-            if(pid === 'a-prods') renderAdminProds();
-            if(pid === 'a-codes') renderAdminCodes();
-            if(pid === 'a-history') renderAdminGlobalHistory();
+            btn.classList.add('active');
         }
 
         function renderAdminUsers() {
@@ -981,162 +918,177 @@
             const search = document.getElementById('user-search-input').value.toLowerCase();
             const filtered = users.filter(u => u.username.toLowerCase().includes(search));
 
-            document.getElementById('list-admin-users').innerHTML = filtered.map(u => `
+            document.getElementById('list-admin-users').innerHTML = filtered.map((u, i) => `
                 <tr>
-                    <td>${u.username} ${u.role==='admin'?'⭐':''}</td>
+                    <td>${u.username}</td>
                     <td>${u.password}</td>
-                    <td style="color:var(--warning)">${u.credit}</td>
-                    <td style="color:var(--success)">${u.wheel}</td>
-                    <td><button class="btn btn-primary" onclick="openEditUser('${u.username}')">📝 จัดการ</button></td>
-                    <td>${u.role==='admin'?'':`<button class="btn btn-danger" onclick="deleteUser('${u.username}')">🗑️</button>`}</td>
+                    <td>${u.credit}</td>
+                    <td>${u.wheel}</td>
+                    <td><button onclick="editUser(${users.indexOf(u)})" class="btn btn-primary">จัดการ</button></td>
+                    <td><button onclick="deleteUser(${users.indexOf(u)})" class="btn btn-danger">ลบ</button></td>
                 </tr>
             `).join('');
         }
 
-        function openEditUser(username) {
+        function editUser(i) {
+            editTargetIndex = i;
             const users = JSON.parse(localStorage.getItem('my_users'));
-            const u = users.find(x => x.username === username);
+            const u = users[i];
             document.getElementById('edit-u-name').innerText = u.username;
             document.getElementById('edit-u-credit').value = u.credit;
             document.getElementById('edit-u-wheel').value = u.wheel;
-            document.getElementById('edit-u-join').value = u.joinDate;
+            document.getElementById('edit-u-join').value = u.join;
             document.getElementById('edit-u-ip').value = u.ip;
-            
-            document.getElementById('edit-u-hist-list').innerHTML = u.history.slice(0, 20).map(h => `
-                <tr><td>${h.time}</td><td>${h.action}</td><td>${h.detail}</td></tr>
-            `).join('');
-            
+            document.getElementById('edit-u-hist-list').innerHTML = u.history.map(h => `<tr><td>${h.time}</td><td>${h.action}</td><td>${h.detail}</td></tr>`).join('');
             openModal('admin-user-modal');
         }
 
         function saveUserEdit() {
-            const name = document.getElementById('edit-u-name').innerText;
-            const users = JSON.parse(localStorage.getItem('my_users'));
-            const uIdx = users.findIndex(x => x.username === name);
-            
-            users[uIdx].credit = parseInt(document.getElementById('edit-u-credit').value);
-            users[uIdx].wheel = parseInt(document.getElementById('edit-u-wheel').value);
-            
+            let users = JSON.parse(localStorage.getItem('my_users'));
+            users[editTargetIndex].credit = parseInt(document.getElementById('edit-u-credit').value);
+            users[editTargetIndex].wheel = parseInt(document.getElementById('edit-u-wheel').value);
             localStorage.setItem('my_users', JSON.stringify(users));
-            alertMsg('สำเร็จ', 'บันทึกข้อมูลเรียบร้อย', '✅');
             renderAdminUsers();
             closeModal('admin-user-modal');
+            showNoti('success', 'เรียบร้อย', 'ปรับปรุงข้อมูลสมาชิกสำเร็จ');
         }
 
-        function deleteUser(username) {
-            if(!confirm(`ยืนยันการลบผู้ใช้ ${username}?`)) return;
+        function deleteUser(i) {
+            if(i === 0) return alert('ไม่สามารถลบ Admin ได้');
+            if(!confirm('ยืนยันการลบสมาชิกรายนี้?')) return;
             let users = JSON.parse(localStorage.getItem('my_users'));
-            users = users.filter(x => x.username !== username);
+            users.splice(i, 1);
             localStorage.setItem('my_users', JSON.stringify(users));
             renderAdminUsers();
         }
 
         function renderAdminQueue() {
-            const q = JSON.parse(localStorage.getItem('my_queue')).filter(x => x.status === 'pending');
-            document.getElementById('queue-badge').innerText = q.length;
-            document.getElementById('list-admin-queue').innerHTML = q.map((x, i) => `
+            const queue = JSON.parse(localStorage.getItem('my_queue'));
+            document.getElementById('queue-badge').innerText = queue.length;
+            document.getElementById('list-admin-queue').innerHTML = queue.map((q, i) => `
                 <tr>
-                    <td>${x.user}</td>
-                    <td style="color:var(--success)">+ ${x.amount}</td>
-                    <td>${x.time}</td>
-                    <td><button class="btn" onclick="viewSlip('${x.slip}')">🖼️ ดูรูป</button></td>
+                    <td>${q.user}</td>
+                    <td>${q.amount}</td>
+                    <td>${q.time}</td>
+                    <td><button class="btn" style="background:#555;">ดูสลิป</button></td>
                     <td>
-                        <button class="btn btn-success" onclick="approveTopup(${i})">✅</button>
-                        <button class="btn btn-danger" onclick="rejectTopup(${i})">❌</button>
+                        <button onclick="approveTopup(${i})" class="btn btn-success">อนุมัติ</button>
+                        <button onclick="rejectTopup(${i})" class="btn btn-danger">ปฏิเสธ</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function viewSlip(src) {
-            document.getElementById('slip-preview-img').src = src;
-            openModal('admin-view-slip-modal');
-        }
-
-        function approveTopup(idx) {
+        function approveTopup(i) {
             let queue = JSON.parse(localStorage.getItem('my_queue'));
-            const item = queue[idx];
             let users = JSON.parse(localStorage.getItem('my_users'));
-            const uIdx = users.findIndex(x => x.username === item.user);
-
-            users[uIdx].credit += item.amount;
-            users[uIdx].history.unshift({ time: new Date().toLocaleString(), action: 'เติมเงิน', detail: `อนุมัติการเติมเงิน ${item.amount} บาท` });
+            const uIdx = users.findIndex(u => u.username === queue[i].user);
             
-            queue.splice(idx, 1);
+            users[uIdx].credit += queue[i].amount;
+            users[uIdx].history.push({ time: new Date().toLocaleString(), action: 'เติมเงิน', detail: `จำนวน ${queue[i].amount} (สำเร็จ)` });
+            
+            queue.splice(i, 1);
             localStorage.setItem('my_users', JSON.stringify(users));
             localStorage.setItem('my_queue', JSON.stringify(queue));
             renderAdminQueue();
-            alertMsg('สำเร็จ', 'อนุมัติการเติมเงินแล้ว', '✅');
+            renderAdminUsers();
         }
 
-        function rejectTopup(idx) {
-            let queue = JSON.parse(localStorage.getItem('my_queue'));
-            queue.splice(idx, 1);
-            localStorage.setItem('my_queue', JSON.stringify(queue));
-            renderAdminQueue();
-        }
-
-        function renderAdminWithdrawQueue() {
-            const q = JSON.parse(localStorage.getItem('my_withdraw_queue')).filter(x => x.status === 'pending');
-            document.getElementById('withdraw-badge').innerText = q.length;
-            document.getElementById('list-admin-withdraw-queue').innerHTML = q.map((x, i) => `
+        function renderAdminWithdraw() {
+            const ws = JSON.parse(localStorage.getItem('my_withdraw'));
+            document.getElementById('withdraw-badge').innerText = ws.length;
+            document.getElementById('list-admin-withdraw-queue').innerHTML = ws.map((w, i) => `
                 <tr>
-                    <td>${x.user}</td>
-                    <td style="color:var(--danger)">- ${x.amount}</td>
-                    <td>${x.info}</td>
-                    <td>${x.time}</td>
+                    <td>${w.user}</td>
+                    <td>${w.amount}</td>
+                    <td>${w.bank}<br>${w.acc}</td>
+                    <td>${w.time}</td>
                     <td>
-                        <button class="btn btn-success" onclick="approveWithdraw(${i})">✅ โอนแล้ว</button>
-                        <button class="btn btn-danger" onclick="rejectWithdraw(${i})">❌ คืนยอด</button>
+                        <button onclick="approveWithdraw(${i})" class="btn btn-success">สำเร็จ</button>
+                        <button onclick="rejectWithdraw(${i})" class="btn btn-danger">ยกเลิก</button>
                     </td>
                 </tr>
             `).join('');
         }
 
-        function approveWithdraw(idx) {
-            let q = JSON.parse(localStorage.getItem('my_withdraw_queue'));
-            q.splice(idx, 1);
-            localStorage.setItem('my_withdraw_queue', JSON.stringify(q));
-            renderAdminWithdrawQueue();
-            alertMsg('สำเร็จ', 'ดำเนินการถอนเงินเรียบร้อย', '✅');
+        function approveWithdraw(i) {
+            let ws = JSON.parse(localStorage.getItem('my_withdraw'));
+            ws.splice(i, 1);
+            localStorage.setItem('my_withdraw', JSON.stringify(ws));
+            renderAdminWithdraw();
         }
 
-        function rejectWithdraw(idx) {
-            let q = JSON.parse(localStorage.getItem('my_withdraw_queue'));
-            const item = q[idx];
-            let users = JSON.parse(localStorage.getItem('my_users'));
-            const uIdx = users.findIndex(x => x.username === item.user);
+        function saveCustomSettings() {
+            const s = {
+                name: document.getElementById('set-web-name').value,
+                topName: document.getElementById('set-top-right-name').value,
+                logo: document.getElementById('set-logo-url').value,
+                qr: document.getElementById('set-qr-url').value,
+                qr_link: document.getElementById('set-qr-link').value,
+                marquee: document.getElementById('set-marquee-text').value,
+                banners: [document.getElementById('set-b-0').value, document.getElementById('set-b-1').value, document.getElementById('set-b-2').value, document.getElementById('set-b-3').value],
+                links: [document.getElementById('set-l-0').value, document.getElementById('set-l-1').value, document.getElementById('set-l-2').value, document.getElementById('set-l-3').value],
+                colors: [document.getElementById('set-color-1').value, document.getElementById('set-color-2').value]
+            };
+            localStorage.setItem('web_settings', JSON.stringify(s));
+            applySettings();
+            showNoti('success', 'บันทึกสำเร็จ', 'ข้อมูลเว็บไซต์ถูกปรับปรุงแล้ว');
+        }
 
-            users[uIdx].credit += item.amount;
-            users[uIdx].history.unshift({ time: new Date().toLocaleString(), action: 'ยกเลิกการถอน', detail: `คืนยอดเงินจากการถอน ${item.amount} เครดิต` });
+        function applySettings() {
+            const s = JSON.parse(localStorage.getItem('web_settings'));
+            document.getElementById('home-web-name').innerText = s.name;
+            document.getElementById('auth-logo').src = s.logo;
+            document.getElementById('user-nav-logo').src = s.logo;
+            document.getElementById('admin-nav-logo').src = s.logo;
+            document.getElementById('admin-qr-preview').src = s.qr;
+            document.getElementById('web-marquee-text').innerText = s.marquee;
+            s.banners.forEach((b, i) => { if(b) document.getElementById(`b-${i}`).style.backgroundImage = `url(${b})`; });
             
-            q.splice(idx, 1);
-            localStorage.setItem('my_users', JSON.stringify(users));
-            localStorage.setItem('my_withdraw_queue', JSON.stringify(q));
-            renderAdminWithdrawQueue();
-            alertMsg('เรียบร้อย', 'ยกเลิกและคืนเครดิตให้ลูกค้าแล้ว', '✅');
-        }
+            // Set Inputs
+            document.getElementById('set-web-name').value = s.name;
+            document.getElementById('set-top-right-name').value = s.topName;
+            document.getElementById('set-logo-url').value = s.logo;
+            document.getElementById('set-qr-url').value = s.qr;
+            document.getElementById('set-qr-link').value = s.qr_link;
+            document.getElementById('set-marquee-text').value = s.marquee;
+            s.banners.forEach((b, i) => document.getElementById(`set-b-${i}`).value = b);
+            s.links.forEach((l, i) => document.getElementById(`set-l-${i}`).value = l);
+            document.getElementById('set-color-1').value = s.colors[0];
+            document.getElementById('set-color-2').value = s.colors[1];
+            
+            document.documentElement.style.setProperty('--primary', s.colors[0]);
+            document.documentElement.style.setProperty('--accent', s.colors[1]);
 
-        // --- Content Management (Admin) ---
-        function renderAdminCats() {
-            const cats = JSON.parse(localStorage.getItem('my_cats'));
-            document.getElementById('list-admin-cats').innerHTML = cats.map((c, i) => `
-                <tr>
-                    <td><img src="${c.img}" style="width:50px; height:50px; border-radius:5px;"></td>
-                    <td>${c.name}</td>
-                    <td><button class="btn btn-danger" onclick="deleteCat(${i})">ลบ</button></td>
-                </tr>
-            `).join('');
+            // Set Admin Table Values
+            renderAdminCats();
+            renderAdminProds();
+            renderAdminCodes();
+            renderAdminGlobalHistory();
+            
+            const wItems = JSON.parse(localStorage.getItem('my_wheel'));
+            wItems.forEach((it, i) => { if(document.getElementById(`w-item-${i}`)) document.getElementById(`w-item-${i}`).value = it; });
         }
 
         function addCat() {
             const n = prompt('ชื่อหมวดหมู่:');
-            const img = prompt('URL รูปภาพหมวดหมู่:');
-            if(!n || !img) return;
+            const im = prompt('URL รูปหมวดหมู่:');
+            if(!n || !im) return;
             let cats = JSON.parse(localStorage.getItem('my_cats'));
-            cats.push({ name: n, img: img });
+            cats.push({ name: n, img: im });
             localStorage.setItem('my_cats', JSON.stringify(cats));
             renderAdminCats();
+        }
+
+        function renderAdminCats() {
+            const cats = JSON.parse(localStorage.getItem('my_cats'));
+            document.getElementById('list-admin-cats').innerHTML = cats.map((c, i) => `
+                <tr>
+                    <td><img src="${c.img}" style="width:40px; height:40px; border-radius:5px;"></td>
+                    <td>${c.name}</td>
+                    <td><button onclick="deleteCat(${i})" class="btn btn-danger">ลบ</button></td>
+                </tr>
+            `).join('');
         }
 
         function deleteCat(i) {
@@ -1144,6 +1096,20 @@
             cats.splice(i, 1);
             localStorage.setItem('my_cats', JSON.stringify(cats));
             renderAdminCats();
+        }
+
+        function addProd() {
+            const n = prompt('ชื่อสินค้า:');
+            const c = prompt('ชื่อหมวดหมู่ (ต้องตรงกับที่มีอยู่):');
+            const p = prompt('ราคา:');
+            const s = prompt('จำนวนในสต็อก:');
+            const im = prompt('URL รูปสินค้า:');
+            if(!n || !c || !p || !s || !im) return;
+
+            let prods = JSON.parse(localStorage.getItem('my_prods'));
+            prods.push({ name: n, cat: c, price: parseInt(p), stock: parseInt(s), img: im });
+            localStorage.setItem('my_prods', JSON.stringify(prods));
+            renderAdminProds();
         }
 
         function renderAdminProds() {
@@ -1154,28 +1120,10 @@
                     <td>${p.name}</td>
                     <td>${p.cat}</td>
                     <td>${p.price}</td>
-                    <td>${p.keys.length}</td>
-                    <td><button class="btn btn-danger" onclick="deleteProd(${i})">ลบ</button></td>
+                    <td>${p.stock}</td>
+                    <td><button onclick="deleteProd(${i})" class="btn btn-danger">ลบ</button></td>
                 </tr>
             `).join('');
-        }
-
-        function addProd() {
-            const n = prompt('ชื่อสินค้า:');
-            const cat = prompt('ชื่อหมวดหมู่ (ต้องสะกดให้ตรง):');
-            const img = prompt('URL รูปภาพสินค้า:');
-            const p = prompt('ราคา:');
-            const k = prompt('ระบุ Keys (คั่นด้วยจุลภาค ,):');
-            if(!n || !cat || !p || !k) return;
-
-            let prods = JSON.parse(localStorage.getItem('my_prods'));
-            prods.push({
-                id: 'p-' + Date.now(),
-                name: n, cat: cat, img: img, price: parseInt(p),
-                keys: k.split(',').map(x => x.trim())
-            });
-            localStorage.setItem('my_prods', JSON.stringify(prods));
-            renderAdminProds();
         }
 
         function deleteProd(i) {
@@ -1185,54 +1133,12 @@
             renderAdminProds();
         }
 
-        function saveWheelSettings() {
-            let items = [];
-            for(let i=0; i<8; i++) items.push(document.getElementById(`w-item-${i}`).value);
-            localStorage.setItem('wheel_items', JSON.stringify(items));
-            alertMsg('สำเร็จ', 'บันทึกการตั้งค่าวงล้อแล้ว', '✅');
-        }
-
-        function saveCustomSettings() {
-            const s = {
-                webName: document.getElementById('set-web-name').value,
-                topRightName: document.getElementById('set-top-right-name').value,
-                logoUrl: document.getElementById('set-logo-url').value,
-                qrUrl: document.getElementById('set-qr-url').value,
-                qrLink: document.getElementById('set-qr-link').value,
-                marqueeText: document.getElementById('set-marquee-text').value,
-                color1: document.getElementById('set-color-1').value,
-                color2: document.getElementById('set-color-2').value,
-                banners: [], links: []
-            };
-            for(let i=0; i<4; i++) {
-                s.banners.push(document.getElementById(`set-b-${i}`).value);
-                s.links.push(document.getElementById(`set-l-${i}`).value);
-            }
-            localStorage.setItem('web_settings', JSON.stringify(s));
-            alertMsg('สำเร็จ', 'บันทึกการปรับแต่งทั้งหมดแล้ว ระบบจะรีโหลด', '💾');
-            setTimeout(() => location.reload(), 1500);
-        }
-
-        // --- Core Utils ---
-        function updateUserDataGlobally() {
-            let users = JSON.parse(localStorage.getItem('my_users'));
-            const uIdx = users.findIndex(x => x.username === currentUser.username);
-            users[uIdx] = currentUser;
-            localStorage.setItem('my_users', JSON.stringify(users));
-        }
-
-        function renderUserHistory() {
-            document.getElementById('list-user-hist').innerHTML = currentUser.history.map(h => `
-                <tr><td>${h.time}</td><td>${h.action}</td><td>${h.detail}</td></tr>
-            `).join('');
-        }
-
-        function renderAdminGlobalHistory() {
-            const users = JSON.parse(localStorage.getItem('my_users'));
-            let all = [];
-            users.forEach(u => u.history.forEach(h => { let item = {...h}; item.user = u.username; all.push(item); }));
-            all.sort((a,b) => new Date(b.time) - new Date(a.time));
-            document.getElementById('list-admin-global-hist').innerHTML = all.map(h => `<tr><td>${h.time}</td><td>${h.user}</td><td>${h.action}</td><td>${h.detail}</td></tr>`).join('');
+        function saveWheelItems() {
+            let w = [];
+            for(let i=0; i<8; i++) w.push(document.getElementById(`w-item-${i}`).value || "รางวัล");
+            localStorage.setItem('my_wheel', JSON.stringify(w));
+            drawWheel();
+            showNoti('success', 'สำเร็จ', 'แก้ไขชื่อรางวัลวงล้อแล้ว');
         }
 
         function renderAdminCodes() {
@@ -1266,10 +1172,26 @@
             renderAdminCodes();
         }
 
+        function renderAdminGlobalHistory() {
+            const users = JSON.parse(localStorage.getItem('my_users'));
+            let all = [];
+            users.forEach(u => u.history.forEach(h => { let item = {...h}; item.user = u.username; all.push(item); }));
+            all.sort((a,b) => new Date(b.time) - new Date(a.time));
+            document.getElementById('list-admin-global-hist').innerHTML = all.map(h => `<tr><td>${h.time}</td><td>${h.user}</td><td>${h.action}</td><td>${h.detail}</td></tr>`).join('');
+        }
+
         function handleBannerClick() {
             const s = JSON.parse(localStorage.getItem('web_settings'));
             const link = s.links[currentBannerIndex];
             if(link && link !== "#") window.open(link, '_blank');
+        }
+
+        // --- Utils ---
+        function syncUser() {
+            let users = JSON.parse(localStorage.getItem('my_users'));
+            const idx = users.findIndex(u => u.username === currentUser.username);
+            users[idx] = currentUser;
+            localStorage.setItem('my_users', JSON.stringify(users));
         }
 
         setInterval(() => {
@@ -1281,34 +1203,13 @@
             }
         }, 5000);
 
-        function alertMsg(t, c, i) {
-            document.getElementById('alert-t').innerText = t;
-            document.getElementById('alert-c').innerText = c;
-            document.getElementById('alert-icon').innerText = i;
-            document.getElementById('alert-modal').style.display = 'flex';
-        }
-
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
-        function toggleAuth() {
-            document.getElementById('login-form').classList.toggle('hidden');
-            document.getElementById('reg-form').classList.toggle('hidden');
-        }
-
-        function toggleSettingsMenu() {
-            document.getElementById('settings-menu').classList.toggle('active');
-        }
-
         window.onclick = function(event) {
             if (!event.target.matches('.settings-btn') && !event.target.matches('.fa-gear')) {
-                const menu = document.getElementById('settings-menu');
-                if (menu && menu.classList.contains('active')) {
-                    menu.classList.remove('active');
-                }
+                document.getElementById('settings-menu').classList.remove('active');
             }
         }
 
-        window.onload = initData;
+        initData();
     </script>
 </body>
 </html>
