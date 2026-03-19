@@ -71,7 +71,7 @@
                     </tr>
                 </thead>
                 <tbody id="user-list" class="divide-y divide-gray-700">
-                    </tbody>
+                </tbody>
             </table>
         </div>
     </div>
@@ -81,7 +81,6 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Firebase Config ของคุณ
         const firebaseConfig = {
             apiKey: "AIzaSyC5HWgNuzuK7nZRWP01hDaxcLfy2GWjt18",
             authDomain: "bestwev-af0c6.firebaseapp.com",
@@ -96,8 +95,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- แก้ไขตรงนี้เป็น Email ของคุณเพื่อเข้าหน้า Admin ---
-        const ADMIN_EMAIL = "warayut102535@gmail.com"; 
+        // --- แก้ไขข้อมูล Admin ตรงนี้ ---
+        const ADMIN_EMAIL = "warayut102535@gmail.com";
+        const ADMIN_PASSWORD_KEY = "123456"; // รหัสผ่านสำหรับเข้าหน้า Admin Panel
 
         // สลับหน้า Login / Register
         window.toggleUI = () => {
@@ -136,14 +136,34 @@
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 if (user.email === ADMIN_EMAIL) {
-                    document.getElementById('auth-section').classList.add('hidden');
-                    document.getElementById('admin-section').classList.remove('hidden');
-                    loadUsers(); // โหลดรายชื่อสมาชิก
+                    // ตรวจสอบว่าเคยยืนยันรหัสผ่าน Admin ใน session นี้หรือยัง
+                    const isAdminVerified = sessionStorage.getItem('adminVerified');
+
+                    if (isAdminVerified === 'true') {
+                        showAdminPanel();
+                    } else {
+                        const pass = prompt("กรุณาใส่รหัสผ่านผู้ดูแลระบบ (Admin Password):");
+                        if (pass === ADMIN_PASSWORD_KEY) {
+                            sessionStorage.setItem('adminVerified', 'true');
+                            showAdminPanel();
+                        } else {
+                            alert("รหัสผ่าน Admin ไม่ถูกต้อง!");
+                            window.logout();
+                        }
+                    }
                 } else {
+                    // ส่วนของผู้ใช้ทั่วไป (หน้าเว็บร้านค้าที่คุณจะบอกรายละเอียดทีหลัง)
                     alert("เข้าสู่ระบบในฐานะสมาชิกทั่วไปสำเร็จ!");
+                    // ตรงนี้ในอนาคตคุณสามารถเปลี่ยนเป็น document.getElementById('shop-section').classList.remove('hidden');
                 }
             }
         });
+
+        function showAdminPanel() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.remove('hidden');
+            loadUsers();
+        }
 
         // ดึงข้อมูลรายชื่อสมาชิก (Real-time)
         function loadUsers() {
@@ -164,7 +184,10 @@
             });
         }
 
-        window.logout = () => signOut(auth).then(() => location.reload());
+        window.logout = () => {
+            sessionStorage.removeItem('adminVerified');
+            signOut(auth).then(() => location.reload());
+        };
     </script>
 </body>
 </html>
