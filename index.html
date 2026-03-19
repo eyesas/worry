@@ -3,95 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Web Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Ultimate System v21.0 - Firebase Admin Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #313338; color: white; font-family: 'Kanit', sans-serif; transition: 0.3s; }
-        .discord-card { background-color: #313338; box-shadow: 0 8px 16px rgba(0,0,0,0.5); border-radius: 8px; }
-        .input-field { background-color: #1e1f22; border: none; color: #dbdee1; }
-        .input-field:focus { outline: 2px solid #5865f2; }
-        .btn-primary { background-color: #5865f2; color: white; font-weight: bold; transition: 0.2s; }
-        .btn-primary:hover { background-color: #4752c4; }
-        .hidden { display: none; }
+        :root {
+            --primary: #5865F2;
+            --success: #43B581; --danger: #F04747; --warning: #FAA61A;
+            --bg-main: #0f0f0f; --bg-secondary: #1a1a1a; --card: #232323; --input: #2b2b2b;
+            --text: #ffffff; --sidebar: #121212; --accent: #ffffff;
+        }
+        * { box-sizing: border-box; }
+        body, html { 
+            height: 100%;
+            margin: 0; font-family: 'Kanit', sans-serif; 
+            background: var(--bg-main); color: var(--text); overflow: hidden;
+        }
+
+        /* --- UI Layout --- */
+        #auth-section { position: fixed; inset: 0; z-index: 9999; background: radial-gradient(circle, var(--bg-secondary) 0%, #000000 100%); display: flex; justify-content: center; align-items: center; backdrop-filter: blur(15px); }
+        #user-section, #admin-section { height: 100vh; width: 100vw; position: relative; display: none; }
+        
+        .admin-wrapper { display: flex; height: 100%; width: 100%; }
+        .admin-sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid #333; display: flex; flex-direction: column; padding: 20px 0; flex-shrink: 0; }
+        .admin-content { flex-grow: 1; padding: 30px; overflow-y: auto; background: var(--bg-main); }
+        .side-item { padding: 15px 25px; cursor: pointer; color: #888; transition: 0.3s; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+        .side-item:hover, .side-item.active { background: rgba(255, 255, 255, 0.05); color: var(--accent); border-left: 4px solid var(--primary); }
+
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; background: #111; display: flex; align-items: center; padding: 0 20px; height: 65px; z-index: 1000; border-bottom: 1px solid #333; }
+        .nav-links { display: flex; gap: 5px; flex-grow: 1; }
+        .nav-item { cursor: pointer; padding: 10px 15px; border-radius: 8px; color: #888; transition: 0.3s; }
+        .nav-item.active { background: rgba(255, 255, 255, 0.05); color: #fff; }
+        .content-area { padding: 110px 20px 20px; height: 100vh; overflow-y: auto; }
+
+        .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #333; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; background: var(--input); color: white; }
+        .btn { cursor: pointer; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #333; }
+        th { background: #1a1a1a; color: var(--primary); }
+
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
+        .modal-box { background: var(--card); padding: 35px; border-radius: 20px; width: 95%; max-width: 600px; text-align: center; }
+        .hidden { display: none !important; }
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body>
 
-    <div id="auth-section" class="discord-card p-8 w-full max-w-[480px]">
-        <div id="login-box">
-            <h2 class="text-2xl font-bold text-center mb-2">ยินดีต้อนรับกลับมา!</h2>
-            <p class="text-[#b5bac1] text-center mb-8">เข้าสู่ระบบด้วยชื่อบัญชีของคุณ</p>
-            
-            <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ชื่อบัญชี (Account ID)</label>
-                <input type="text" id="login-account" class="input-field w-full p-2.5 rounded">
-            </div>
-            <div class="mb-6 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">รหัสผ่าน</label>
-                <input type="password" id="login-password" class="input-field w-full p-2.5 rounded">
-            </div>
-            
-            <button id="btnLogin" class="btn-primary w-full py-3 rounded mb-2">เข้าสู่ระบบ</button>
-            <p class="text-sm text-[#b5bac1]">ต้องการบัญชีใช่ไหม? <a href="javascript:void(0)" onclick="toggleUI()" class="text-[#00a8fc] hover:underline">ลงทะเบียน</a></p>
-        </div>
-
-        <div id="register-box" class="hidden">
-            <h2 class="text-2xl font-bold text-center mb-6">สร้างบัญชี</h2>
-            <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ชื่อบัญชี (Account ID)</label>
-                <input type="text" id="reg-account" class="input-field w-full p-2.5 rounded" placeholder="ใช้สำหรับ Login">
-            </div>
-            <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ชื่อที่แสดง (Display Name)</label>
-                <input type="text" id="reg-user" class="input-field w-full p-2.5 rounded">
-            </div>
-            <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">อีเมล (Gmail)</label>
-                <input type="email" id="reg-email" class="input-field w-full p-2.5 rounded">
-            </div>
-            <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">รหัสผ่าน</label>
-                <input type="password" id="reg-pass" class="input-field w-full p-2.5 rounded">
-            </div>
-            <div class="mb-6 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ยืนยันรหัสผ่าน</label>
-                <input type="password" id="reg-pass-confirm" class="input-field w-full p-2.5 rounded">
-            </div>
-            <button id="btnRegister" class="btn-primary w-full py-3 rounded mb-2">สมัครสมาชิก</button>
-            <p class="text-sm text-[#b5bac1]">มีบัญชีอยู่แล้ว? <a href="javascript:void(0)" onclick="toggleUI()" class="text-[#00a8fc] hover:underline">เข้าสู่ระบบ</a></p>
+    <div id="alert-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h1 id="alert-icon">🎉</h1>
+            <h2 id="alert-t">สำเร็จ</h2>
+            <div id="alert-c" style="margin-bottom: 20px;"></div>
+            <button onclick="closeModal('alert-modal')" class="btn btn-primary" style="width:100%">ตกลง</button>
         </div>
     </div>
 
-    <div id="admin-section" class="hidden w-full max-w-5xl">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold">Admin Dashboard</h1>
-            <button onclick="logout()" class="bg-[#da373c] hover:bg-[#a12829] px-4 py-2 rounded text-sm font-bold">ออกจากระบบ</button>
+    <section id="auth-section">
+        <div class="card" style="width:400px;">
+            <div id="auth-login" style="text-align: center;">
+                <h2>เข้าสู่ระบบออนไลน์</h2>
+                <input type="text" id="log-user" placeholder="ชื่อผู้ใช้งาน">
+                <input type="password" id="log-pass" placeholder="รหัสผ่าน">
+                <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="login()">เข้าสู่ระบบ</button>
+                <p onclick="toggleAuth()" style="cursor:pointer; margin-top:15px; color:var(--primary)">ยังไม่มีบัญชี? สมัครสมาชิก</p>
+            </div>
+            <div id="auth-reg" class="hidden" style="text-align: center;">
+                <h2>สมัครสมาชิกใหม่</h2>
+                <input type="text" id="reg-user" placeholder="ชื่อผู้ใช้งาน">
+                <input type="password" id="reg-pass" placeholder="รหัสผ่าน">
+                <input type="password" id="reg-conf" placeholder="ยืนยันรหัสผ่าน">
+                <button class="btn btn-success" style="width:100%; margin-top: 10px;" onclick="register()">สมัครสมาชิก</button>
+                <p onclick="toggleAuth()" style="cursor:pointer; margin-top:15px; color:var(--primary)">มีบัญชีแล้ว? เข้าสู่ระบบ</p>
+            </div>
         </div>
-        
-        <div class="bg-[#2b2d31] rounded-lg overflow-hidden shadow-xl border border-gray-700">
-            <table class="w-full text-left">
-                <thead class="bg-[#1e1f22] text-[#b5bac1] text-xs uppercase">
-                    <tr>
-                        <th class="p-4">Account ID</th>
-                        <th class="p-4">Display Name</th>
-                        <th class="p-4">Email</th>
-                        <th class="p-4">Registered Date</th>
-                    </tr>
-                </thead>
-                <tbody id="user-list" class="divide-y divide-gray-700"></tbody>
-            </table>
+    </section>
+
+    <section id="user-section">
+        <div class="navbar">
+            <span style="font-weight: bold; color: var(--primary); font-size: 1.2rem; margin-right: 20px;">ULTIMATE STORE</span>
+            <div class="nav-links">
+                <div class="nav-item active" onclick="switchUserTab('home')">หน้าแรก</div>
+                <div class="nav-item" onclick="switchUserTab('shop')">ร้านค้า</div>
+            </div>
+            <div style="text-align:right">
+                <div id="user-display-name">User</div>
+                <div style="color:var(--success); font-size: 0.9rem;"><span id="user-credit">0</span> เครดิต</div>
+                <button onclick="logout()" class="btn btn-danger" style="padding:2px 10px; font-size:0.7rem;">ออก</button>
+            </div>
         </div>
-    </div>
+        <div class="content-area">
+            <div id="tab-home" class="user-tab">
+                <div class="card">
+                    <h3>📢 ประกาศจากทางร้าน</h3>
+                    <p>ยินดีต้อนรับสมาชิกทุกท่านเข้าสู่ระบบออนไลน์ (Firebase Cloud Database)</p>
+                </div>
+            </div>
+            <div id="tab-shop" class="user-tab hidden">
+                <div class="grid-cards" id="list-products">
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin-section">
+        <div class="admin-wrapper">
+            <div class="admin-sidebar">
+                <div style="padding:20px; border-bottom:1px solid #333;"><h2 style="margin:0; color:var(--primary)">ADMIN PANEL</h2></div>
+                <div class="side-item active" onclick="switchAdminTab('users')"><i class="fa-solid fa-users"></i> จัดการสมาชิก</div>
+                <div class="side-item" onclick="logout()"><i class="fa-solid fa-power-off"></i> ออกจากระบบ</div>
+            </div>
+            <div class="admin-content">
+                <div id="admin-tab-users" class="admin-tab">
+                    <div class="card">
+                        <h3>👥 รายชื่อสมาชิกและรหัสผ่าน (Realtime)</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ชื่อผู้ใช้งาน</th>
+                                    <th>รหัสผ่าน</th>
+                                    <th>เครดิต</th>
+                                    <th>บทบาท</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-user-list">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // Firebase Configuration (ของคุณ)
         const firebaseConfig = {
             apiKey: "AIzaSyC5HWgNuzuK7nZRWP01hDaxcLfy2GWjt18",
             authDomain: "bestwev-af0c6.firebaseapp.com",
+            databaseURL: "https://bestwev-af0c6-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "bestwev-af0c6",
             storageBucket: "bestwev-af0c6.firebasestorage.app",
             messagingSenderId: "114869261413",
@@ -100,119 +157,111 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
 
-        const ADMIN_EMAIL = "warayut102535@gmail.com";
-        const ADMIN_PANEL_PASSWORD = "123456"; // คุณสามารถเปลี่ยนรหัส Admin ได้ที่นี่
+        window.dbData = { users: {} };
+        window.currentUser = null;
 
-        window.toggleUI = () => {
-            document.getElementById('login-box').classList.toggle('hidden');
-            document.getElementById('register-box').classList.toggle('hidden');
-        };
-
-        // สมัครสมาชิกด้วย Account ID
-        document.getElementById('btnRegister').onclick = async () => {
-            const accountId = document.getElementById('reg-account').value.trim();
-            const username = document.getElementById('reg-user').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const password = document.getElementById('reg-pass').value;
-            const confirmPass = document.getElementById('reg-pass-confirm').value;
-
-            if (password !== confirmPass) return alert("รหัสผ่านไม่ตรงกัน");
-            if (!accountId || !email) return alert("กรุณากรอกข้อมูลให้ครบ");
-
-            try {
-                // ตรวจสอบว่า Account ID นี้ถูกใช้ไปหรือยัง
-                const idCheck = await getDoc(doc(db, "account_mapping", accountId));
-                if (idCheck.exists()) return alert("ชื่อบัญชีนี้ถูกใช้งานแล้ว");
-
-                const res = await createUserWithEmailAndPassword(auth, email, password);
-                
-                // เก็บข้อมูลผู้ใช้
-                await setDoc(doc(db, "users", res.user.uid), {
-                    accountId: accountId,
-                    username: username,
-                    email: email,
-                    timestamp: new Date().getTime()
-                });
-
-                // เก็บ Mapping ระหว่าง Account ID กับ Email เพื่อใช้ตอน Login
-                await setDoc(doc(db, "account_mapping", accountId), {
-                    email: email
-                });
-
-                alert("สมัครสมาชิกเรียบร้อย!");
-                location.reload();
-            } catch (err) { alert(err.message); }
-        };
-
-        // เข้าสู่ระบบด้วย Account ID
-        document.getElementById('btnLogin').onclick = async () => {
-            const accountId = document.getElementById('login-account').value.trim();
-            const password = document.getElementById('login-password').value;
-
-            try {
-                // ค้นหา Email จาก Account ID
-                const mapDoc = await getDoc(doc(db, "account_mapping", accountId));
-                if (!mapDoc.exists()) return alert("ไม่พบชื่อบัญชีนี้");
-
-                const email = mapDoc.data().email;
-                await signInWithEmailAndPassword(auth, email, password);
-            } catch (err) { alert("ชื่อบัญชีหรือรหัสผ่านไม่ถูกต้อง"); }
-        };
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                if (user.email === ADMIN_EMAIL) {
-                    const isVerified = sessionStorage.getItem('isAdminAuth');
-                    if (isVerified === 'true') {
-                        showAdmin();
-                    } else {
-                        const p = prompt("กรุณาใส่รหัสผ่านความปลอดภัย Admin:");
-                        if (p === ADMIN_PANEL_PASSWORD) {
-                            sessionStorage.setItem('isAdminAuth', 'true');
-                            showAdmin();
-                        } else {
-                            alert("รหัสผ่านไม่ถูกต้อง");
-                            window.logout();
-                        }
-                    }
-                } else {
-                    // ส่วนของหน้าเว็บร้านค้า (รอรายละเอียดเพิ่มเติมจากคุณ)
-                    alert("เข้าสู่ระบบร้านค้าสำเร็จ!");
+        // ดึงข้อมูล Realtime
+        onValue(ref(db, '/'), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                window.dbData = data;
+                renderAdminUsers();
+                if (window.currentUser) {
+                    window.currentUser = data.users[window.currentUser.username];
+                    updateUI();
                 }
             }
         });
 
-        function showAdmin() {
-            document.getElementById('auth-section').classList.add('hidden');
-            document.getElementById('admin-section').classList.remove('hidden');
-            loadUsers();
-        }
+        // ฟังก์ชัน Login
+        window.login = function() {
+            const u = document.getElementById('log-user').value;
+            const p = document.getElementById('log-pass').value;
+            const user = window.dbData.users ? window.dbData.users[u] : null;
 
-        function loadUsers() {
-            const q = query(collection(db, "users"), orderBy("timestamp", "desc"));
-            onSnapshot(q, (snap) => {
-                const list = document.getElementById('user-list');
-                list.innerHTML = "";
-                snap.forEach((doc) => {
-                    const data = doc.data();
-                    list.innerHTML += `
-                        <tr class="hover:bg-[#35373c]">
-                            <td class="p-4 text-[#00a8fc] font-mono">${data.accountId || 'N/A'}</td>
-                            <td class="p-4 font-bold">${data.username}</td>
-                            <td class="p-4">${data.email}</td>
-                            <td class="p-4 text-xs text-gray-500">${new Date(data.timestamp).toLocaleString()}</td>
-                        </tr>
-                    `;
-                });
+            if (user && user.password === p) {
+                window.currentUser = user;
+                document.getElementById('auth-section').style.display = 'none';
+                
+                if(user.role === 'admin') {
+                    document.getElementById('admin-section').style.display = 'block';
+                } else {
+                    document.getElementById('user-section').style.display = 'block';
+                }
+                updateUI();
+                showAlert('ยินดีต้อนรับเข้าสู่ระบบ', 'success');
+            } else {
+                showAlert('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง', 'error');
+            }
+        };
+
+        // ฟังก์ชันสมัครสมาชิก
+        window.register = async function() {
+            const u = document.getElementById('reg-user').value;
+            const p = document.getElementById('reg-pass').value;
+            const c = document.getElementById('reg-conf').value;
+
+            if (u.length < 4) return showAlert('ชื่อผู้ใช้ต้องมี 4 ตัวอักษรขึ้นไป', 'error');
+            if (p !== c) return showAlert('รหัสผ่านไม่ตรงกัน', 'error');
+            if (window.dbData.users && window.dbData.users[u]) return showAlert('มีชื่อผู้ใช้งานนี้ในระบบแล้ว', 'error');
+
+            const newUser = {
+                username: u,
+                password: p,
+                credit: 0,
+                role: 'user'
+            };
+
+            await set(ref(db, 'users/' + u), newUser);
+            showAlert('สมัครสมาชิกสำเร็จ!', 'success');
+            toggleAuth();
+        };
+
+        // แสดงผลหน้า Admin
+        window.renderAdminUsers = function() {
+            const list = document.getElementById('admin-user-list');
+            if(!list || !window.dbData.users) return;
+            list.innerHTML = '';
+            Object.values(window.dbData.users).forEach(user => {
+                list.innerHTML += `
+                    <tr>
+                        <td>${user.username}</td>
+                        <td style="color:var(--warning)">${user.password}</td>
+                        <td style="color:var(--success)">${(user.credit || 0).toLocaleString()}</td>
+                        <td><span style="background:${user.role === 'admin' ? 'var(--primary)' : '#444'}; padding:2px 8px; border-radius:5px; font-size:0.8rem;">${user.role}</span></td>
+                    </tr>
+                `;
             });
-        }
+        };
 
-        window.logout = () => {
-            sessionStorage.removeItem('isAdminAuth');
-            signOut(auth).then(() => location.reload());
+        window.updateUI = function() {
+            if (!window.currentUser) return;
+            document.getElementById('user-display-name').innerText = window.currentUser.username;
+            document.getElementById('user-credit').innerText = (window.currentUser.credit || 0).toLocaleString();
+        };
+
+        window.showAlert = function(msg, type) {
+            document.getElementById('alert-t').innerText = type === 'success' ? 'สำเร็จ' : 'แจ้งเตือน';
+            document.getElementById('alert-icon').innerText = type === 'success' ? '🎉' : '⚠️';
+            document.getElementById('alert-c').innerText = msg;
+            document.getElementById('alert-modal').style.display = 'flex';
+        };
+
+        window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; };
+        window.toggleAuth = function() {
+            document.getElementById('auth-login').classList.toggle('hidden');
+            document.getElementById('auth-reg').classList.toggle('hidden');
+        };
+        window.logout = function() { location.reload(); };
+        window.switchUserTab = function(tab) {
+            document.querySelectorAll('.user-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+        };
+        window.switchAdminTab = function(tab) {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById('admin-tab-' + tab).classList.remove('hidden');
         };
     </script>
 </body>
