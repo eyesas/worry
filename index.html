@@ -21,15 +21,15 @@
     <div id="auth-section" class="discord-card p-8 w-full max-w-[480px]">
         <div id="login-box">
             <h2 class="text-2xl font-bold text-center mb-2">ยินดีต้อนรับกลับมา!</h2>
-            <p class="text-[#b5bac1] text-center mb-8">เราตื่นเต้นมากที่ได้พบคุณอีกครั้ง!</p>
+            <p class="text-[#b5bac1] text-center mb-8">เข้าสู่ระบบด้วยชื่อบัญชีของคุณ</p>
             
             <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">อีเมล</label>
-                <input type="email" id="email" class="input-field w-full p-2.5 rounded">
+                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ชื่อบัญชี (Account ID)</label>
+                <input type="text" id="login-account" class="input-field w-full p-2.5 rounded">
             </div>
             <div class="mb-6 text-left">
                 <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">รหัสผ่าน</label>
-                <input type="password" id="password" class="input-field w-full p-2.5 rounded">
+                <input type="password" id="login-password" class="input-field w-full p-2.5 rounded">
             </div>
             
             <button id="btnLogin" class="btn-primary w-full py-3 rounded mb-2">เข้าสู่ระบบ</button>
@@ -39,16 +39,24 @@
         <div id="register-box" class="hidden">
             <h2 class="text-2xl font-bold text-center mb-6">สร้างบัญชี</h2>
             <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">อีเมล</label>
+                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ชื่อบัญชี (Account ID)</label>
+                <input type="text" id="reg-account" class="input-field w-full p-2.5 rounded" placeholder="ใช้สำหรับ Login">
+            </div>
+            <div class="mb-4 text-left">
+                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ชื่อที่แสดง (Display Name)</label>
+                <input type="text" id="reg-user" class="input-field w-full p-2.5 rounded">
+            </div>
+            <div class="mb-4 text-left">
+                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">อีเมล (Gmail)</label>
                 <input type="email" id="reg-email" class="input-field w-full p-2.5 rounded">
             </div>
             <div class="mb-4 text-left">
-                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ชื่อผู้ใช้</label>
-                <input type="text" id="reg-user" class="input-field w-full p-2.5 rounded">
-            </div>
-            <div class="mb-6 text-left">
                 <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">รหัสผ่าน</label>
                 <input type="password" id="reg-pass" class="input-field w-full p-2.5 rounded">
+            </div>
+            <div class="mb-6 text-left">
+                <label class="block text-xs font-bold uppercase text-[#b5bac1] mb-2">ยืนยันรหัสผ่าน</label>
+                <input type="password" id="reg-pass-confirm" class="input-field w-full p-2.5 rounded">
             </div>
             <button id="btnRegister" class="btn-primary w-full py-3 rounded mb-2">สมัครสมาชิก</button>
             <p class="text-sm text-[#b5bac1]">มีบัญชีอยู่แล้ว? <a href="javascript:void(0)" onclick="toggleUI()" class="text-[#00a8fc] hover:underline">เข้าสู่ระบบ</a></p>
@@ -65,13 +73,13 @@
             <table class="w-full text-left">
                 <thead class="bg-[#1e1f22] text-[#b5bac1] text-xs uppercase">
                     <tr>
-                        <th class="p-4">Username</th>
+                        <th class="p-4">Account ID</th>
+                        <th class="p-4">Display Name</th>
                         <th class="p-4">Email</th>
                         <th class="p-4">Registered Date</th>
                     </tr>
                 </thead>
-                <tbody id="user-list" class="divide-y divide-gray-700">
-                </tbody>
+                <tbody id="user-list" class="divide-y divide-gray-700"></tbody>
             </table>
         </div>
     </div>
@@ -79,7 +87,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, query, orderBy, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyC5HWgNuzuK7nZRWP01hDaxcLfy2GWjt18",
@@ -95,77 +103,94 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- แก้ไขข้อมูล Admin ตรงนี้ ---
         const ADMIN_EMAIL = "warayut102535@gmail.com";
-        const ADMIN_PASSWORD_KEY = "123456"; // รหัสผ่านสำหรับเข้าหน้า Admin Panel
+        const ADMIN_PANEL_PASSWORD = "123456"; // คุณสามารถเปลี่ยนรหัส Admin ได้ที่นี่
 
-        // สลับหน้า Login / Register
         window.toggleUI = () => {
             document.getElementById('login-box').classList.toggle('hidden');
             document.getElementById('register-box').classList.toggle('hidden');
         };
 
-        // สมัครสมาชิก
+        // สมัครสมาชิกด้วย Account ID
         document.getElementById('btnRegister').onclick = async () => {
-            const email = document.getElementById('reg-email').value;
+            const accountId = document.getElementById('reg-account').value.trim();
+            const username = document.getElementById('reg-user').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
             const password = document.getElementById('reg-pass').value;
-            const username = document.getElementById('reg-user').value;
+            const confirmPass = document.getElementById('reg-pass-confirm').value;
+
+            if (password !== confirmPass) return alert("รหัสผ่านไม่ตรงกัน");
+            if (!accountId || !email) return alert("กรุณากรอกข้อมูลให้ครบ");
 
             try {
+                // ตรวจสอบว่า Account ID นี้ถูกใช้ไปหรือยัง
+                const idCheck = await getDoc(doc(db, "account_mapping", accountId));
+                if (idCheck.exists()) return alert("ชื่อบัญชีนี้ถูกใช้งานแล้ว");
+
                 const res = await createUserWithEmailAndPassword(auth, email, password);
+                
+                // เก็บข้อมูลผู้ใช้
                 await setDoc(doc(db, "users", res.user.uid), {
+                    accountId: accountId,
                     username: username,
                     email: email,
                     timestamp: new Date().getTime()
                 });
+
+                // เก็บ Mapping ระหว่าง Account ID กับ Email เพื่อใช้ตอน Login
+                await setDoc(doc(db, "account_mapping", accountId), {
+                    email: email
+                });
+
                 alert("สมัครสมาชิกเรียบร้อย!");
                 location.reload();
             } catch (err) { alert(err.message); }
         };
 
-        // เข้าสู่ระบบ
+        // เข้าสู่ระบบด้วย Account ID
         document.getElementById('btnLogin').onclick = async () => {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const accountId = document.getElementById('login-account').value.trim();
+            const password = document.getElementById('login-password').value;
+
             try {
+                // ค้นหา Email จาก Account ID
+                const mapDoc = await getDoc(doc(db, "account_mapping", accountId));
+                if (!mapDoc.exists()) return alert("ไม่พบชื่อบัญชีนี้");
+
+                const email = mapDoc.data().email;
                 await signInWithEmailAndPassword(auth, email, password);
-            } catch (err) { alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง"); }
+            } catch (err) { alert("ชื่อบัญชีหรือรหัสผ่านไม่ถูกต้อง"); }
         };
 
-        // เช็คสถานะการเข้าสู่ระบบ
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 if (user.email === ADMIN_EMAIL) {
-                    // ตรวจสอบว่าเคยยืนยันรหัสผ่าน Admin ใน session นี้หรือยัง
-                    const isAdminVerified = sessionStorage.getItem('adminVerified');
-
-                    if (isAdminVerified === 'true') {
-                        showAdminPanel();
+                    const isVerified = sessionStorage.getItem('isAdminAuth');
+                    if (isVerified === 'true') {
+                        showAdmin();
                     } else {
-                        const pass = prompt("กรุณาใส่รหัสผ่านผู้ดูแลระบบ (Admin Password):");
-                        if (pass === ADMIN_PASSWORD_KEY) {
-                            sessionStorage.setItem('adminVerified', 'true');
-                            showAdminPanel();
+                        const p = prompt("กรุณาใส่รหัสผ่านความปลอดภัย Admin:");
+                        if (p === ADMIN_PANEL_PASSWORD) {
+                            sessionStorage.setItem('isAdminAuth', 'true');
+                            showAdmin();
                         } else {
-                            alert("รหัสผ่าน Admin ไม่ถูกต้อง!");
+                            alert("รหัสผ่านไม่ถูกต้อง");
                             window.logout();
                         }
                     }
                 } else {
-                    // ส่วนของผู้ใช้ทั่วไป (หน้าเว็บร้านค้าที่คุณจะบอกรายละเอียดทีหลัง)
-                    alert("เข้าสู่ระบบในฐานะสมาชิกทั่วไปสำเร็จ!");
-                    // ตรงนี้ในอนาคตคุณสามารถเปลี่ยนเป็น document.getElementById('shop-section').classList.remove('hidden');
+                    // ส่วนของหน้าเว็บร้านค้า (รอรายละเอียดเพิ่มเติมจากคุณ)
+                    alert("เข้าสู่ระบบร้านค้าสำเร็จ!");
                 }
             }
         });
 
-        function showAdminPanel() {
+        function showAdmin() {
             document.getElementById('auth-section').classList.add('hidden');
             document.getElementById('admin-section').classList.remove('hidden');
             loadUsers();
         }
 
-        // ดึงข้อมูลรายชื่อสมาชิก (Real-time)
         function loadUsers() {
             const q = query(collection(db, "users"), orderBy("timestamp", "desc"));
             onSnapshot(q, (snap) => {
@@ -175,7 +200,8 @@
                     const data = doc.data();
                     list.innerHTML += `
                         <tr class="hover:bg-[#35373c]">
-                            <td class="p-4 font-bold text-[#5865f2]">${data.username}</td>
+                            <td class="p-4 text-[#00a8fc] font-mono">${data.accountId || 'N/A'}</td>
+                            <td class="p-4 font-bold">${data.username}</td>
                             <td class="p-4">${data.email}</td>
                             <td class="p-4 text-xs text-gray-500">${new Date(data.timestamp).toLocaleString()}</td>
                         </tr>
@@ -185,7 +211,7 @@
         }
 
         window.logout = () => {
-            sessionStorage.removeItem('adminVerified');
+            sessionStorage.removeItem('isAdminAuth');
             signOut(auth).then(() => location.reload());
         };
     </script>
