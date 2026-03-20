@@ -3,136 +3,455 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบสมาชิกสมบูรณ์แบบ</title>
+    <title>BestWeb Store - Admin System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Kanit', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; }
-        .container { background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 400px; }
-        h2 { margin-top: 0; color: #333; text-align: center; font-size: 24px; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; transition: 0.3s; }
-        input:focus { border-color: #764ba2; outline: none; box-shadow: 0 0 5px rgba(118, 75, 162, 0.3); }
-        button { width: 100%; padding: 13px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 10px; }
-        button:hover { background: #218838; transform: translateY(-1px); }
-        #btn-login { background: #667eea; }
-        #btn-login:hover { background: #5a67d8; }
-        .toggle-link { text-align: center; margin-top: 20px; font-size: 14px; color: #667eea; cursor: pointer; font-weight: 500; }
-        .hidden { display: none; }
-        .info-text { font-size: 13px; color: #777; margin-bottom: 15px; text-align: center; line-height: 1.4; }
+        :root {
+            --bg: #0b0e11;
+            --card: #151a21;
+            --primary: #7289da;
+            --accent: #00d2ff;
+            --admin-gold: #ffcc00;
+            --text: #ffffff;
+            --danger: #ff4b2b;
+            --success: #2ecc71;
+            --warning: #f1c40f;
+        }
+
+        body { font-family: 'Kanit', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
+
+        /* --- Navbar --- */
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; background: #111; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 1000; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .admin-btn { background: var(--admin-gold); color: black; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; display: none; }
+        .credit-box { background: #1e2329; border: 1px solid var(--accent); padding: 5px 15px; border-radius: 20px; color: var(--accent); font-weight: bold; }
+        .btn-logout { background: var(--danger); color: white; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; }
+        .btn-contact { background: #25d366; color: white; text-decoration: none; padding: 6px 12px; border-radius: 5px; font-size: 14px; font-weight: bold; }
+
+        /* --- Banner Slider --- */
+        .banner-container { width: 100%; height: 350px; position: relative; overflow: hidden; margin-bottom: 30px; border-radius: 15px; background: #222; }
+        .banner-slide { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .banner-slide.active-slide { display: block; animation: fadeIn 0.8s ease; }
+
+        /* --- Sections --- */
+        .page-section { display: none; min-height: 80vh; padding: 40px 5%; animation: fadeIn 0.4s ease; }
+        .active { display: block !important; }
+
+        /* --- UI Components --- */
+        .auth-card { background: var(--card); padding: 40px; border-radius: 15px; width: 100%; max-width: 380px; margin: 50px auto; text-align: center; border: 1px solid #222; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 10px 0; background: #2b3139; border: 1px solid #444; border-radius: 8px; color: white; box-sizing: border-box; font-family: 'Kanit'; }
+        .btn-submit { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-submit:hover { opacity: 0.9; }
+
+        /* --- Shop Grid --- */
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .item-card { background: var(--card); border-radius: 12px; border: 1px solid #333; overflow: hidden; display: flex; flex-direction: column; transition: 0.3s; }
+        .item-img-box { width: 100%; height: 180px; background: #222; }
+        .item-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .item-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .item-name { font-size: 17px; font-weight: 600; }
+        .item-price { color: var(--accent); font-size: 20px; font-weight: bold; margin: 10px 0; }
+
+        /* --- Admin Panel --- */
+        .admin-panel-box { background: #1a1a1a; border: 1px solid var(--admin-gold); padding: 20px; border-radius: 10px; margin-top: 20px; overflow-x: auto; }
+        .admin-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn { padding: 8px 15px; background: #333; border: 1px solid #444; color: #fff; cursor: pointer; border-radius: 5px; font-size: 14px; }
+        .active-tab { background: var(--admin-gold) !important; color: black !important; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 800px; }
+        th { background: #222; color: var(--admin-gold); padding: 12px; text-align: left; border-bottom: 2px solid var(--admin-gold); }
+        td { padding: 12px; border-bottom: 1px solid #333; font-size: 14px; }
+
+        .status-badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; }
+        .badge-pending { background: var(--warning); color: #000; }
+        .badge-success { background: var(--success); color: #fff; }
+        .badge-danger { background: var(--danger); color: #fff; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="container">
-        <div id="register-form">
+    <nav class="navbar">
+        <div style="font-size: 20px; font-weight: bold; color: var(--primary);">BESTWEB STORE</div>
+        <div id="nav-info" class="nav-right" style="display: none;">
+            <a id="nav-contact-link" href="#" target="_blank" class="btn-contact">📞 ติดต่อแอดมิน</a>
+            <button class="tab-btn" onclick="routeTo('page-shop')">🏠 หน้าแรก</button>
+            <button id="admin-control-btn" class="admin-btn" onclick="openAdminPage()">⚙️ จัดการเว็บ</button>
+            <button class="tab-btn" onclick="routeTo('page-history')">📜 ประวัติ</button>
+            <div class="credit-box">฿ <span id="display-credit">0</span></div>
+            <button class="btn-logout" id="logout-btn">Logout</button>
+        </div>
+    </nav>
+
+    <section id="page-login" class="page-section active">
+        <div class="auth-card">
+            <h2>เข้าสู่ระบบ</h2>
+            <input type="email" id="login-email" placeholder="อีเมล">
+            <input type="password" id="login-pass" placeholder="รหัสผ่าน">
+            <button class="btn-submit" id="do-login" style="background: var(--accent); color: black;">Login</button>
+            <span class="toggle-link" onclick="routeTo('page-register')" style="cursor:pointer; display:block; margin-top:15px;">สมัครสมาชิกที่นี่</span>
+        </div>
+    </section>
+
+    <section id="page-register" class="page-section">
+        <div class="auth-card">
             <h2>สมัครสมาชิก</h2>
-            <p class="info-text">กรอกข้อมูลเพื่อสร้างบัญชีใหม่</p>
-            <input type="text" id="reg-username" placeholder="ชื่อผู้ใช้งาน (Display Name)" required>
-            <input type="email" id="reg-email" placeholder="อีเมล (เช่น example@mail.com)" required>
-            <input type="password" id="reg-password" placeholder="รหัสผ่าน (6 ตัวขึ้นไป)" required>
-            <input type="password" id="reg-confirm-password" placeholder="ยืนยันรหัสผ่านอีกครั้ง" required>
-            <button id="btn-register">สมัครและส่งเมลยืนยัน</button>
-            <div class="toggle-link" onclick="toggleForm()">มีบัญชีอยู่แล้ว? เข้าสู่ระบบ</div>
+            <input type="email" id="reg-email" placeholder="อีเมล">
+            <input type="password" id="reg-pass" placeholder="รหัสผ่าน (6 ตัวขึ้นไป)">
+            <input type="password" id="reg-confirm" placeholder="ยืนยันรหัสผ่าน">
+            <button class="btn-submit" id="do-register">ยืนยันสมัคร</button>
+            <span class="toggle-link" onclick="routeTo('page-login')" style="cursor:pointer; display:block; margin-top:15px;">มีบัญชีแล้ว? เข้าสู่ระบบ</span>
+        </div>
+    </section>
+
+    <section id="page-waiting" class="page-section">
+        <div class="auth-card">
+            <h2>✉️ ยืนยันอีเมล</h2>
+            <p>กรุณากดลิงก์ยืนยันในอีเมลของคุณ <br><b id="show-email"></b></p>
+            <button class="btn-submit" id="resend-email">ส่งเมลอีกครั้ง</button>
+            <button class="btn-submit" onclick="location.reload()" style="background:#555">ฉันยืนยันแล้ว</button>
+        </div>
+    </section>
+
+    <section id="page-shop" class="page-section">
+        <div class="banner-container" id="banner-slider">
+            <img src="https://via.placeholder.com/1200x350?text=Banner+1" class="banner-slide active-slide">
+            <img src="https://via.placeholder.com/1200x350?text=Banner+2" class="banner-slide">
+            <img src="https://via.placeholder.com/1200x350?text=Banner+3" class="banner-slide">
         </div>
 
-        <div id="login-form" class="hidden">
-            <h2>เข้าสู่ระบบ</h2>
-            <p class="info-text">กรุณายืนยันอีเมลก่อนเข้าสู่ระบบครั้งแรก</p>
-            <input type="email" id="login-email" placeholder="อีเมล" required>
-            <input type="password" id="login-password" placeholder="รหัสผ่าน" required>
-            <button id="btn-login">เข้าสู่ระบบ</button>
-            <div class="toggle-link" onclick="toggleForm()">ยังไม่มีบัญชี? สมัครสมาชิก</div>
+        <h1>สินค้าทั้งหมด</h1>
+        <div class="shop-grid" id="shop-container"></div>
+    </section>
+
+    <section id="page-history" class="page-section">
+        <h1>📜 ประวัติการซื้อ</h1>
+        <div class="admin-panel-box" style="border-color: var(--primary);">
+            <table>
+                <thead><tr><th>สินค้า</th><th>ราคา</th><th>สถานะ</th><th>ข้อมูลที่ได้รับ</th><th>วันที่</th></tr></thead>
+                <tbody id="history-table"></tbody>
+            </table>
         </div>
-    </div>
+    </section>
+
+    <section id="page-admin" class="page-section">
+        <h1 style="color: var(--admin-gold);">Admin Dashboard</h1>
+        <div class="admin-tabs">
+            <button class="tab-btn active-tab" onclick="switchTab('users')">สมาชิก</button>
+            <button class="tab-btn" onclick="switchTab('products')">สินค้า</button>
+            <button class="tab-btn" onclick="switchTab('orders')">รายการสั่งซื้อ (Manual)</button>
+            <button class="tab-btn" onclick="switchTab('settings')">🎨 ตกแต่งเว็บ</button>
+        </div>
+
+        <div id="tab-users" class="admin-panel-box">
+            <input type="text" id="search-user" placeholder="ค้นหาด้วย Gmail..." oninput="loadUsers()">
+            <table>
+                <thead><tr><th>อีเมล</th><th>บทบาท</th><th>IP</th><th>ใช้งานล่าสุด</th><th>เครดิต</th><th>จัดการ</th></tr></thead>
+                <tbody id="user-table"></tbody>
+            </table>
+        </div>
+
+        <div id="tab-products" class="admin-panel-box" style="display:none;">
+            <h3>เพิ่มสินค้า</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="text" id="p-name" placeholder="ชื่อสินค้า">
+                <input type="number" id="p-price" placeholder="ราคา">
+                <input type="text" id="p-img" placeholder="ลิงก์รูปภาพ">
+                <select id="p-type" onchange="document.getElementById('stock-area').style.display = this.value==='auto'?'block':'none'">
+                    <option value="auto">Auto (รหัส)</option>
+                    <option value="manual">Manual (ส่งงาน)</option>
+                </select>
+            </div>
+            <div id="stock-area"><textarea id="p-stock" placeholder="ใส่รหัส (1 บรรทัด = 1 ชิ้น)"></textarea></div>
+            <button class="btn-submit" style="background:var(--success)" onclick="addProduct()">เพิ่มสินค้า</button>
+            <hr>
+            <table>
+                <thead><tr><th>ชื่อ</th><th>ประเภท</th><th>ราคา</th><th>สต็อก</th><th>จัดการ</th></tr></thead>
+                <tbody id="admin-p-table"></tbody>
+            </table>
+        </div>
+
+        <div id="tab-orders" class="admin-panel-box" style="display:none;">
+            <table>
+                <thead><tr><th>ลูกค้า</th><th>สินค้า</th><th>ข้อมูลที่ส่ง</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+                <tbody id="admin-order-table"></tbody>
+            </table>
+        </div>
+
+        <div id="tab-settings" class="admin-panel-box" style="display:none;">
+            <h3>จัดการ Banner (3 รูป)</h3>
+            <input type="text" id="set-banner-1" placeholder="ลิงก์รูป Banner 1">
+            <input type="text" id="set-banner-2" placeholder="ลิงก์รูป Banner 2">
+            <input type="text" id="set-banner-3" placeholder="ลิงก์รูป Banner 3">
+            <hr>
+            <h3>จัดการช่องทางติดต่อ</h3>
+            <input type="text" id="set-contact-url" placeholder="ลิงก์ติดต่อ (เช่น ลิงก์ Facebook หรือ Line)">
+            <button class="btn-submit" style="background:var(--success)" onclick="saveSettings()">บันทึกการตกแต่ง</button>
+        </div>
+    </section>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendEmailVerification, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, getDocs, where, serverTimestamp, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyC5HWgNuzuK7nZRWP01hDaxcLfy2GWjt18",
             authDomain: "bestwev-af0c6.firebaseapp.com",
-            databaseURL: "https://bestwev-af0c6-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "bestwev-af0c6",
-            storageBucket: "bestwev-af0c6.firebasestorage.app",
-            messagingSenderId: "114869261413",
-            appId: "1:114869261413:web:c2f7b34e75a03d7902a28c",
-            measurementId: "G-DVFE8XJT4C"
+            appId: "1:114869261413:web:c2f7b34e75a03d7902a28c"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getDatabase(app);
+        const db = getFirestore(app);
+        const ADMIN_EMAIL = "warayut102535@gmail.com";
 
-        window.toggleForm = () => {
-            document.getElementById('register-form').classList.toggle('hidden');
-            document.getElementById('login-form').classList.toggle('hidden');
+        // --- ระบบ Banner Slider ---
+        let currentSlide = 0;
+        function startBanner() {
+            const slides = document.querySelectorAll('.banner-slide');
+            if(slides.length === 0) return;
+            setInterval(() => {
+                slides[currentSlide].classList.remove('active-slide');
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active-slide');
+            }, 3000); // เปลี่ยนทุก 3 วินาที
+        }
+
+        // --- ระบบนำทาง ---
+        window.routeTo = (id) => {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'page-shop') loadShop();
+            if(id === 'page-history') loadHistory();
         };
 
-        // --- ระบบสมัครสมาชิก + เช็กเมลซ้ำ + ยืนยันเมล ---
-        document.getElementById('btn-register').addEventListener('click', async () => {
-            const username = document.getElementById('reg-username').value;
+        // --- เช็คสถานะการเข้าใช้งาน ---
+        onAuthStateChanged(auth, async (user) => {
+            await loadWebSettings(); // โหลดการตกแต่งก่อน
+            if (user) {
+                if (!user.emailVerified) {
+                    document.getElementById('show-email').innerText = user.email;
+                    routeTo('page-waiting');
+                    return;
+                }
+                const userRef = doc(db, "users", user.uid);
+                const snap = await getDoc(userRef);
+                const ipRes = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipRes.json();
+
+                if (!snap.exists()) {
+                    await setDoc(userRef, { email: user.email, role: user.email === ADMIN_EMAIL ? 'admin' : 'user', credit: 0, ip: ipData.ip, lastActive: serverTimestamp() });
+                } else {
+                    await updateDoc(userRef, { lastActive: serverTimestamp(), ip: ipData.ip });
+                }
+
+                const uData = (await getDoc(userRef)).data();
+                document.getElementById('nav-info').style.display = 'flex';
+                document.getElementById('display-credit').innerText = uData.credit;
+                document.getElementById('admin-control-btn').style.display = uData.role === 'admin' ? 'block' : 'none';
+                routeTo('page-shop');
+                startBanner();
+            } else {
+                document.getElementById('nav-info').style.display = 'none';
+                routeTo('page-login');
+            }
+        });
+
+        // --- ตกแต่งเว็บ & Banner ---
+        window.saveSettings = async () => {
+            const b1 = document.getElementById('set-banner-1').value;
+            const b2 = document.getElementById('set-banner-2').value;
+            const b3 = document.getElementById('set-banner-3').value;
+            const contact = document.getElementById('set-contact-url').value;
+
+            await setDoc(doc(db, "settings", "web_config"), {
+                banners: [b1, b2, b3],
+                contactUrl: contact
+            });
+            alert("บันทึกการตกแต่งเรียบร้อย!");
+            location.reload();
+        };
+
+        async function loadWebSettings() {
+            const snap = await getDoc(doc(db, "settings", "web_config"));
+            if (snap.exists()) {
+                const data = snap.data();
+                const slides = document.querySelectorAll('.banner-slide');
+                if(data.banners) {
+                    data.banners.forEach((url, i) => {
+                        if(url && slides[i]) slides[i].src = url;
+                    });
+                    // ใส่ค่าในช่อง input ของ admin ด้วย
+                    document.getElementById('set-banner-1').value = data.banners[0] || "";
+                    document.getElementById('set-banner-2').value = data.banners[1] || "";
+                    document.getElementById('set-banner-3').value = data.banners[2] || "";
+                }
+                if(data.contactUrl) {
+                    document.getElementById('nav-contact-link').href = data.contactUrl;
+                    document.getElementById('set-contact-url').value = data.contactUrl;
+                }
+            }
+        }
+
+        // --- สมัคร / ล็อกอิน ---
+        document.getElementById('do-register').addEventListener('click', async () => {
             const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-password').value;
-            const confirmPass = document.getElementById('reg-confirm-password').value;
+            const pass = document.getElementById('reg-pass').value;
+            if (pass !== document.getElementById('reg-confirm').value) return alert("รหัสไม่ตรงกัน");
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                await sendEmailVerification(cred.user);
+                alert("ส่งลิงก์ยืนยันไปที่อีเมลแล้ว!");
+            } catch (e) { alert(e.message); }
+        });
 
-            if (!username || !email || !pass) return alert("กรุณากรอกข้อมูลให้ครบทุกช่อง");
-            if (pass !== confirmPass) return alert("รหัสผ่านไม่ตรงกัน!");
+        document.getElementById('do-login').addEventListener('click', async () => {
+            try { await signInWithEmailAndPassword(auth, document.getElementById('login-email').value, document.getElementById('login-pass').value); }
+            catch (e) { alert("อีเมลหรือรหัสผ่านผิด"); }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => signOut(auth).then(() => location.reload()));
+
+        // --- ระบบสินค้า (Shop) ---
+        async function loadShop() {
+            const container = document.getElementById('shop-container');
+            container.innerHTML = "กำลังโหลด...";
+            const snap = await getDocs(collection(db, "products"));
+            container.innerHTML = "";
+            snap.forEach(d => {
+                const p = d.data();
+                container.innerHTML += `
+                <div class="item-card">
+                    <div class="item-img-box"><img src="${p.img || 'https://via.placeholder.com/200'}"></div>
+                    <div class="item-info">
+                        <div class="item-name">${p.name}</div>
+                        <div class="item-price">฿${p.price}</div>
+                        <div style="font-size:12px; color:#888; margin-bottom:10px;">${p.type === 'auto' ? 'สต็อก: ' + p.stock.length : 'ประเภท: Manual'}</div>
+                        <button class="btn-submit" onclick="buyItem('${d.id}')">สั่งซื้อ</button>
+                    </div>
+                </div>`;
+            });
+        }
+
+        window.buyItem = async (pid) => {
+            const user = auth.currentUser;
+            const pSnap = await getDoc(doc(db, "products", pid));
+            const p = pSnap.data();
+            const uRef = doc(db, "users", user.uid);
+            const uData = (await getDoc(uRef)).data();
+
+            if (uData.credit < p.price) return alert("เครดิตไม่พอ");
+            if (p.type === 'auto' && p.stock.length === 0) return alert("สินค้าหมด");
+
+            let info = "";
+            if (p.type === 'manual') {
+                info = prompt("ระบุข้อมูล (เช่น ชื่อตัวละคร/รหัส):");
+                if (!info) return;
+            } else {
+                if (!confirm("ยืนยันการซื้อ?")) return;
+            }
 
             try {
-                // 1. สร้างบัญชี
-                const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
-
-                // 2. บันทึกชื่อลง Profile และ Database
-                await updateProfile(user, { displayName: username });
-                await set(ref(db, 'users/' + user.uid), {
-                    username: username,
-                    email: email,
-                    createdAt: new Date().toISOString()
+                const newCredit = uData.credit - p.price;
+                let finalInfo = info;
+                if (p.type === 'auto') {
+                    finalInfo = p.stock.shift();
+                    await updateDoc(doc(db, "products", pid), { stock: p.stock });
+                }
+                await updateDoc(uRef, { credit: newCredit });
+                await setDoc(doc(collection(db, "orders")), {
+                    uid: user.uid, email: user.email, pName: p.name, price: p.price,
+                    info: finalInfo, type: p.type, status: p.type === 'auto' ? 'success' : 'pending',
+                    date: serverTimestamp()
                 });
+                alert("ซื้อสำเร็จ!");
+                location.reload();
+            } catch (e) { alert("เกิดข้อผิดพลาด"); }
+        };
 
-                // 3. ส่งอีเมลยืนยัน
-                await sendEmailVerification(user);
-                
-                alert("สมัครสำเร็จ! อีเมลนี้ใช้งานได้\nระบบได้ส่งลิงก์ยืนยันไปที่ " + email + " แล้ว (โปรดเช็กในเมลขยะด้วย)");
-                
-                await signOut(auth);
-                toggleForm(); 
+        // --- ประวัติ ---
+        async function loadHistory() {
+            const q = query(collection(db, "orders"), where("uid", "==", auth.currentUser.uid));
+            const snap = await getDocs(q);
+            const tbody = document.getElementById('history-table');
+            tbody.innerHTML = "";
+            snap.forEach(d => {
+                const o = d.data();
+                const status = `<span class="status-badge badge-${o.status}">${o.status}</span>`;
+                tbody.innerHTML += `<tr><td>${o.pName}</td><td>฿${o.price}</td><td>${status}</td><td>${o.info}</td><td>${o.date ? o.date.toDate().toLocaleString('th-TH') : '-'}</td></tr>`;
+            });
+        }
 
-            } catch (error) {
-                // เช็กว่าอีเมลซ้ำหรือไม่
-                if (error.code === 'auth/email-already-in-use') {
-                    alert("ขออภัย: อีเมลนี้ถูกใช้งานโดยสมาชิกท่านอื่นแล้วครับ");
-                } else if (error.code === 'auth/weak-password') {
-                    alert("รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร");
-                } else {
-                    alert("เกิดข้อผิดพลาด: " + error.message);
-                }
-            }
-        });
+        // --- Admin Functions ---
+        window.switchTab = (t) => {
+            document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active-tab'));
+            document.getElementById('tab-' + t).style.display = 'block';
+            event.target.classList.add('active-tab');
+            if (t === 'users') loadUsers();
+            if (t === 'products') loadAdminProducts();
+            if (t === 'orders') loadAdminOrders();
+        };
 
-        // --- ระบบเข้าสู่ระบบ ---
-        document.getElementById('btn-login').addEventListener('click', async () => {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-password').value;
+        window.loadUsers = async () => {
+            const search = document.getElementById('search-user').value.toLowerCase();
+            const snap = await getDocs(collection(db, "users"));
+            const tbody = document.getElementById('user-table');
+            tbody.innerHTML = "";
+            snap.forEach(d => {
+                const u = d.data();
+                if (search && !u.email.toLowerCase().includes(search)) return;
+                tbody.innerHTML += `<tr><td>${u.email}</td><td>${u.role}</td><td>${u.ip}</td><td>${u.lastActive ? u.lastActive.toDate().toLocaleString('th-TH') : '-'}</td><td>฿${u.credit}</td><td><button onclick="editCredit('${d.id}',${u.credit})">แก้เงิน</button></td></tr>`;
+            });
+        };
 
-            try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, pass);
-                const user = userCredential.user;
+        window.editCredit = async (id, cur) => {
+            const val = prompt("เครดิตใหม่:", cur);
+            if (val !== null) { await updateDoc(doc(db, "users", id), { credit: parseInt(val) }); loadUsers(); }
+        };
 
-                if (user.emailVerified) {
-                    alert("เข้าสู่ระบบสำเร็จ! สวัสดีคุณ " + (user.displayName || user.email));
-                    // window.location.href = "dashboard.html"; 
-                } else {
-                    alert("คุณยังไม่ได้กดยืนยันอีเมล! โปรดตรวจสอบใน Inbox ของคุณ");
-                    await signOut(auth);
-                }
-            } catch (error) {
-                alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
-            }
-        });
+        window.addProduct = async () => {
+            const name = document.getElementById('p-name').value;
+            const price = parseInt(document.getElementById('p-price').value);
+            const type = document.getElementById('p-type').value;
+            const stock = type === 'auto' ? document.getElementById('p-stock').value.split('\n').filter(s => s.trim() !== "") : [];
+            await setDoc(doc(collection(db, "products")), { name, price, img: document.getElementById('p-img').value, type, stock, createdAt: serverTimestamp() });
+            alert("เพิ่มแล้ว");
+            loadAdminProducts();
+        };
+
+        async function loadAdminProducts() {
+            const snap = await getDocs(collection(db, "products"));
+            const tbody = document.getElementById('admin-p-table');
+            tbody.innerHTML = "";
+            snap.forEach(d => {
+                const p = d.data();
+                tbody.innerHTML += `<tr><td>${p.name}</td><td>${p.type}</td><td>฿${p.price}</td><td>${p.type === 'auto' ? p.stock.length : 'N/A'}</td><td><button onclick="deleteP('${d.id}')">ลบ</button></td></tr>`;
+            });
+        }
+        window.deleteP = async (id) => { if(confirm("ลบ?")) { await deleteDoc(doc(db, "products", id)); loadAdminProducts(); }};
+
+        async function loadAdminOrders() {
+            const snap = await getDocs(collection(db, "orders"));
+            const tbody = document.getElementById('admin-order-table');
+            tbody.innerHTML = "";
+            snap.forEach(d => {
+                const o = d.data();
+                if (o.type === 'auto') return; // ไม่แสดงออเดอร์ Auto ในนี้เพราะสำเร็จทันที
+                tbody.innerHTML += `<tr><td>${o.email}</td><td>${o.pName}</td><td>${o.info}</td><td>${o.date ? o.date.toDate().toLocaleString('th-TH') : '-'}</td><td><span class="status-badge badge-${o.status}">${o.status}</span></td>
+                <td>
+                    <button onclick="updateO('${d.id}','success')" style="background:green;color:white;border:none;padding:5px;cursor:pointer">เสร็จ</button>
+                    <button onclick="updateO('${d.id}','cancel')" style="background:red;color:white;border:none;padding:5px;cursor:pointer">ยกเลิก</button>
+                </td></tr>`;
+            });
+        }
+        window.updateO = async (id, s) => { await updateDoc(doc(db, "orders", id), { status: s }); loadAdminOrders(); };
+
+        window.openAdminPage = () => { routeTo('page-admin'); switchTab('users'); };
+
     </script>
 </body>
 </html>
