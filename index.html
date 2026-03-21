@@ -62,6 +62,7 @@
         .btn-contact { background: #25d366; color: white; text-decoration: none; padding: 6px 12px; border-radius: 5px; font-size: 14px; font-weight: bold; }
         .btn-topup { background: var(--success); color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .btn-withdraw { background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn-nav-shop { background: #34495e; color: white; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
         /* --- Banner Slider --- */
         .banner-container { width: 100%; height: 350px; position: relative; overflow: hidden; margin-bottom: 30px; border-radius: 15px; background: #222; }
@@ -118,26 +119,28 @@
 </head>
 <body>
 
+    <!-- Modal: View Slip -->
     <div id="slipModal" class="modal">
         <span style="position:absolute; top:20px; right:35px; color:#fff; font-size:40px; cursor:pointer;" onclick="document.getElementById('slipModal').style.display='none'">&times;</span>
         <img class="modal-content" id="imgModal">
     </div>
 
-    <div id="adminOrderModal" class="ui-modal">
+    <!-- Modal: Confirm Normal Purchase -->
+    <div id="confirmBuyModal" class="ui-modal">
         <div class="ui-modal-card">
-            <h3 style="color: var(--admin-gold); margin-top: 0;">จัดการรายการสั่งซื้อ</h3>
-            <p id="admin-order-detail" style="font-size: 14px; color: #ccc;"></p>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button class="btn-submit" id="btn-order-success" style="background: var(--success);">✅ เสร็จสิ้น</button>
-                <button class="btn-submit" id="btn-order-refund" style="background: var(--danger);">❌ ยกเลิกและคืนเงิน</button>
-                <button class="btn-submit" onclick="document.getElementById('adminOrderModal').style.display='none'" style="background: #444;">กลับ</button>
+            <h3 style="color: var(--accent); margin-top: 0;">ยืนยันการสั่งซื้อ</h3>
+            <p id="confirm-p-details" style="font-size: 15px; color: #ccc; margin-bottom: 20px;"></p>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-submit" id="final-confirm-buy" style="background: var(--success);">ยืนยัน</button>
+                <button class="btn-submit" onclick="document.getElementById('confirmBuyModal').style.display='none'" style="background: #444;">ยกเลิก</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal: Manual Input Purchase -->
     <div id="manualBuyModal" class="ui-modal">
         <div class="ui-modal-card">
-            <h3 id="buy-confirm-title" style="color: var(--accent); margin-top: 0;">ยืนยันการสั่งซื้อ</h3>
+            <h3 id="buy-confirm-title" style="color: var(--accent); margin-top: 0;">กรอกข้อมูลการสั่งซื้อ</h3>
             <p id="manual-p-name" style="font-size: 14px; color: #ccc;"></p>
             <div id="manual-inputs">
                 <input type="text" id="manual-user-input" placeholder="ชื่อตัวละคร / ไอดี">
@@ -150,6 +153,7 @@
         </div>
     </div>
 
+    <!-- Modal: Change Password -->
     <div id="passwordModal" class="ui-modal">
         <div class="ui-modal-card">
             <h3 style="color: var(--primary); margin-top: 0;">เปลี่ยนรหัสผ่าน</h3>
@@ -163,16 +167,19 @@
         </div>
     </div>
 
+    <!-- Announcement Bar -->
     <div class="announcement-bar">
         <div id="display-announcement" class="marquee-text">ยินดีต้อนรับสู่ BestWeb Store!</div>
     </div>
 
+    <!-- Navbar -->
     <nav class="navbar">
         <a href="javascript:void(0)" class="nav-left-brand" onclick="routeTo('page-shop')">
             <img id="display-logo" class="nav-logo" src="" alt="Logo">
             <div id="display-web-name" class="nav-brand-name">BESTWEB STORE</div>
         </a>
         <div id="nav-info" class="nav-right" style="display: none;">
+            <button class="btn-nav-shop" onclick="routeTo('page-shop')">🛒 หน้าหลักร้านค้า</button>
             <a id="nav-contact-link" href="#" target="_blank" class="btn-contact">📞 ติดต่อแอดมิน</a>
             <button class="btn-topup" onclick="routeTo('page-topup')">💰 เติมเงิน</button>
             <button class="btn-withdraw" onclick="routeTo('page-withdraw')">💸 ถอนเงิน</button>
@@ -184,6 +191,7 @@
         </div>
     </nav>
 
+    <!-- Login Section -->
     <section id="page-login" class="page-section active">
         <div class="auth-card">
             <h2 style="color: var(--accent);">เข้าสู่ระบบ</h2>
@@ -194,6 +202,7 @@
         </div>
     </section>
 
+    <!-- Register Section -->
     <section id="page-register" class="page-section">
         <div class="auth-card">
             <h2>สมัครสมาชิก</h2>
@@ -205,6 +214,7 @@
         </div>
     </section>
 
+    <!-- Withdraw Section -->
     <section id="page-withdraw" class="page-section">
         <div class="auth-card" style="max-width: 500px;">
             <h2 style="color: #f39c12;">ระบบถอนเงิน</h2>
@@ -227,11 +237,12 @@
         </div>
     </section>
 
+    <!-- Topup Section -->
     <section id="page-topup" class="page-section">
         <div class="auth-card" style="max-width: 500px;">
             <h2>เติมเงินเข้าระบบ</h2>
             <div style="background: #1e2329; padding: 15px; border-radius: 10px; border: 1px solid var(--admin-gold); margin-bottom: 20px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--admin-gold);">🎁 แลก Code เเติมเงิน</h4>
+                <h4 style="margin: 0 0 10px 0; color: var(--admin-gold);">🎁 แลก Code เติมเงิน</h4>
                 <input type="text" id="input-gift-code" placeholder="ใส่รหัส Code ที่นี่...">
                 <button class="btn-submit" style="background: var(--admin-gold); color: black;" onclick="redeemCode()">แลกรับเครดิต</button>
             </div>
@@ -261,6 +272,7 @@
         </div>
     </section>
 
+    <!-- Shop Section -->
     <section id="page-shop" class="page-section">
         <div class="banner-container">
             <img id="b-img-1" src="" class="banner-slide active-slide">
@@ -268,10 +280,11 @@
             <img id="b-img-3" src="" class="banner-slide">
             <img id="b-img-4" src="" class="banner-slide">
         </div>
-        <h1>สินค้าแนะนำ</h1>
+        <h1>สินค้าทั้งหมด</h1>
         <div class="shop-grid" id="shop-container"></div>
     </section>
 
+    <!-- User History Section -->
     <section id="page-history" class="page-section">
         <h1>📜 ประวัติการสั่งซื้อ</h1>
         <div class="admin-panel-box">
@@ -282,6 +295,7 @@
         </div>
     </section>
 
+    <!-- Admin Dashboard Section -->
     <section id="page-admin" class="page-section">
         <h1 style="color: var(--admin-gold);">Admin Dashboard</h1>
         <div class="admin-tabs">
@@ -380,18 +394,19 @@
         </div>
     </section>
 
+    <!-- Main Logic Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, getDocs, where, serverTimestamp, deleteDoc, onSnapshot, orderBy, addDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
+        // Firebase Config (คงเดิมตามสคริปต์ล่าสุด)
         const firebaseConfig = {
             apiKey: "AIzaSyC5HWgNuzuK7nZRWP01hDaxcLfy2GWjt18",
             authDomain: "bestwev-af0c6.firebaseapp.com",
             projectId: "bestwev-af0c6",
             appId: "1:114869261413:web:c2f7b34e75a03d7902a28c"
         };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -399,9 +414,11 @@
         let currentSlide = 0;
         let bannerTimer = null;
 
+        // Routing System
         window.routeTo = (id) => {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            window.scrollTo(0, 0); // เลื่อนขึ้นบนสุดเมื่อเปลี่ยนหน้า
             if(id === 'page-shop') { startBanner(); loadShop(); }
             if(id === 'page-history') loadHistory();
         };
@@ -417,6 +434,7 @@
             }, 4000);
         }
 
+        // Global State Listener
         onAuthStateChanged(auth, async (user) => {
             loadWebSettings();
             if (user) {
@@ -426,6 +444,7 @@
                         document.getElementById('nav-info').style.display = 'flex';
                         document.getElementById('display-credit').innerText = uData.credit;
                         document.getElementById('admin-control-btn').style.display = uData.role === 'admin' ? 'block' : 'none';
+                        
                         if(uData.role === 'admin') { listenToRequests(); loadAdminOrders(); }
                         if(document.getElementById('page-login').classList.contains('active')) routeTo('page-shop');
                     }
@@ -436,28 +455,28 @@
             }
         });
 
-        // --- Auth ---
+        // --- Auth Functions ---
         document.getElementById('do-login').addEventListener('click', async () => {
             const user = document.getElementById('login-username').value.trim();
             const pass = document.getElementById('login-pass').value;
-            try { await signInWithEmailAndPassword(auth, user + "@internal.com", pass); } catch (e) { alert("ล็อกอินไม่สำเร็จ"); }
+            try { await signInWithEmailAndPassword(auth, user + "@internal.com", pass); } catch (e) { alert("ล็อกอินไม่สำเร็จ ตรวจสอบ Username หรือ Password"); }
         });
 
         document.getElementById('do-register').addEventListener('click', async () => {
             const user = document.getElementById('reg-username').value.trim();
             const pass = document.getElementById('reg-pass').value;
             const confirm = document.getElementById('reg-confirm').value;
-            if(pass.length < 6) return alert("รหัสผ่านสั้นเกินไป");
-            if(pass !== confirm) return alert("รหัสผ่านไม่ตรงกัน");
+            if(pass.length < 6) return alert("รหัสผ่านสั้นเกินไป ต้องมีอย่างน้อย 6 ตัว");
+            if(pass !== confirm) return alert("รหัสผ่านยืนยันไม่ตรงกัน");
             try {
                 const cred = await createUserWithEmailAndPassword(auth, user + "@internal.com", pass);
                 await setDoc(doc(db, "users", cred.user.uid), { username: user, password: pass, role: 'user', credit: 0, date: serverTimestamp() });
-            } catch (e) { alert("Username นี้มีผู้ใช้แล้ว"); }
+                alert("สมัครสมาชิกสำเร็จ!");
+            } catch (e) { alert("Username นี้มีผู้ใช้แล้ว หรือเกิดข้อผิดพลาด"); }
         });
 
         document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-        // --- ระบบเปลี่ยนรหัสผ่าน ---
         document.getElementById('do-change-password').addEventListener('click', async () => {
             const oldPass = document.getElementById('pw-old').value;
             const newPass = document.getElementById('pw-new').value;
@@ -474,15 +493,12 @@
                 await updateDoc(doc(db, "users", user.uid), { password: newPass });
                 alert("เปลี่ยนรหัสผ่านเสร็จสิ้น!");
                 document.getElementById('passwordModal').style.display = 'none';
-                document.getElementById('pw-old').value = "";
-                document.getElementById('pw-new').value = "";
-                document.getElementById('pw-confirm').value = "";
             } catch (error) {
                 alert("รหัสผ่านเดิมไม่ถูกต้อง หรือเกิดข้อผิดพลาด");
             }
         });
 
-        // --- Shop & Product ---
+        // --- Shop & Purchasing Logic ---
         async function loadShop() {
             const snap = await getDocs(query(collection(db, "products"), orderBy("date", "desc")));
             const container = document.getElementById('shop-container');
@@ -496,112 +512,148 @@
                     <div class="item-info">
                         <div class="item-name">${p.name}</div>
                         <div class="item-price">฿${p.price}</div>
-                        <button class="btn-submit" onclick="buyProduct('${d.id}')">ซื้อตอนนี้</button>
+                        <button class="btn-submit" onclick="startBuyProcess('${d.id}')">ซื้อตอนนี้</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        window.addProduct = async () => {
-            const name = document.getElementById('p-name').value;
-            const price = parseInt(document.getElementById('p-price').value);
-            const img = document.getElementById('p-img').value;
-            const type = document.getElementById('p-type').value;
-            const stock = document.getElementById('p-stock').value.split('\n').filter(s => s.trim() !== "");
-            await addDoc(collection(db, "products"), { name, price, img, type, stock, date: serverTimestamp() });
-            alert("เพิ่มสินค้าแล้ว");
-            loadAdminProducts();
-        };
-
-        async function loadAdminProducts() {
-            const snap = await getDocs(collection(db, "products"));
-            const tbody = document.getElementById('admin-p-table');
-            tbody.innerHTML = "";
-            snap.forEach(d => {
-                const p = d.data();
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${p.name}</td><td>${p.price}</td><td>${p.stock?.length || 0}</td>
-                <td><button onclick="removeProduct('${d.id}')" style="background:red; color:white; border:none; border-radius:4px; cursor:pointer;">ลบ</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.removeProduct = async (id) => {
-            if(confirm("ต้องการลบสินค้านี้ใช่หรือไม่?")) {
-                await deleteDoc(doc(db, "products", id));
-                loadAdminProducts();
-                loadShop();
-            }
-        };
-
-        // --- Buying System ---
-        window.buyProduct = async (id) => {
-            const pRef = doc(db, "products", id);
-            const pSnap = await getDoc(pRef);
+        // ขั้นตอนการซื้อใหม่: ยืนยันก่อน
+        window.startBuyProcess = async (id) => {
+            const pSnap = await getDoc(doc(db, "products", id));
             const p = pSnap.data();
-            const uSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
-            const u = uSnap.data();
+            window.tempProductId = id;
+            window.tempProductData = p;
 
-            if (u.credit < p.price) return alert("เครดิตไม่พอ");
-
-            if (p.type === 'auto') {
-                if (p.stock.length === 0) return alert("สินค้าหมด");
-                const item = p.stock.shift();
-                await updateDoc(pRef, { stock: p.stock });
-                await updateDoc(doc(db, "users", auth.currentUser.uid), { credit: increment(-p.price) });
-                await addDoc(collection(db, "orders"), {
-                    uid: auth.currentUser.uid, pName: p.name, price: p.price, info: item, status: 'success', date: serverTimestamp()
-                });
-                alert("สั่งซื้อสำเร็จ! ดูข้อมูลที่หน้าประวัติ");
+            if(p.type === 'auto') {
+                document.getElementById('confirm-p-details').innerText = `คุณต้องการซื้อ "${p.name}" ในราคา ฿${p.price} ใช่หรือไม่?`;
+                document.getElementById('confirmBuyModal').style.display = 'flex';
             } else {
-                window.currentManualBuy = { id, ...p };
-                document.getElementById('manual-p-name').innerText = `สินค้า: ${p.name} | ราคา: ${p.price} ฿`;
+                // สำหรับ Manual ให้ไปหน้ากรอกข้อมูลเลย (ซึ่งในหน้านั้นมีปุ่มยืนยันอีกชั้นอยู่แล้ว)
+                window.currentManualProduct = { id, ...p };
+                document.getElementById('manual-p-name').innerText = "สินค้า: " + p.name + " (ราคา ฿" + p.price + ")";
                 document.getElementById('manualBuyModal').style.display = 'flex';
             }
         };
 
-        document.getElementById('confirm-manual-buy').addEventListener('click', async () => {
-            const uIn = document.getElementById('manual-user-input').value;
-            const pIn = document.getElementById('manual-pass-input').value;
-            const p = window.currentManualBuy;
-            if(!uIn) return alert("กรุณาใส่ชื่อตัวละคร/ไอดี");
-            await updateDoc(doc(db, "users", auth.currentUser.uid), { credit: increment(-p.price) });
-            await addDoc(collection(db, "orders"), {
-                uid: auth.currentUser.uid, pName: p.name, price: p.price, info: `User: ${uIn} | Pass: ${pIn}`, status: 'pending', date: serverTimestamp()
-            });
-            alert("สั่งซื้อสำเร็จ รอแอดมินดำเนินการ");
-            closeManualModal();
+        // ยืนยันซื้อระบบ Auto
+        document.getElementById('final-confirm-buy').addEventListener('click', async () => {
+            const id = window.tempProductId;
+            const p = window.tempProductData;
+            const user = auth.currentUser;
+            const uSnap = await getDoc(doc(db, "users", user.uid));
+            const u = uSnap.data();
+
+            document.getElementById('confirmBuyModal').style.display = 'none';
+
+            if(u.credit < p.price) return alert("เครดิตไม่เพียงพอ กรุณาเติมเงิน");
+            if(!p.stock || p.stock.length === 0) return alert("ขออภัย สินค้าหมดชั่วคราว");
+
+            try {
+                const item = p.stock[0];
+                const remain = p.stock.slice(1);
+                await updateDoc(doc(db, "users", user.uid), { credit: increment(-p.price) });
+                await updateDoc(doc(db, "products", id), { stock: remain });
+                await addDoc(collection(db, "orders"), { 
+                    uid: user.uid, 
+                    pId: id, 
+                    pName: p.name, 
+                    price: p.price, 
+                    info: item, 
+                    status: 'success', 
+                    date: serverTimestamp() 
+                });
+                alert("สั่งซื้อสำเร็จ! สามารถดูรหัสได้ในหน้าประวัติการสั่งซื้อ");
+                routeTo('page-history');
+            } catch (e) {
+                alert("เกิดข้อผิดพลาดในการทำรายการ");
+            }
         });
 
-        window.closeManualModal = () => document.getElementById('manualBuyModal').style.display = 'none';
+        window.closeManualModal = () => { document.getElementById('manualBuyModal').style.display = 'none'; };
 
-        // --- History ---
+        // ยืนยันซื้อระบบ Manual
+        document.getElementById('confirm-manual-buy').addEventListener('click', async () => {
+            const userIn = document.getElementById('manual-user-input').value.trim();
+            const passIn = document.getElementById('manual-pass-input').value.trim();
+            if(!userIn || !passIn) return alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+
+            const user = auth.currentUser;
+            const p = window.currentManualProduct;
+            const uSnap = await getDoc(doc(db, "users", user.uid));
+            const u = uSnap.data();
+
+            if(u.credit < p.price) return alert("เครดิตไม่เพียงพอ กรุณาเติมเงิน");
+
+            try {
+                await updateDoc(doc(db, "users", user.uid), { credit: increment(-p.price) });
+                await addDoc(collection(db, "orders"), {
+                    uid: user.uid, 
+                    username: u.username,
+                    pId: p.id, 
+                    pName: p.name, 
+                    price: p.price, 
+                    info: `User: ${userIn} | Pass: ${passIn}`, 
+                    status: 'pending', 
+                    date: serverTimestamp()
+                });
+                alert("ส่งคำขอสั่งซื้อแล้ว แอดมินจะรีบดำเนินการให้เร็วที่สุด");
+                closeManualModal();
+                routeTo('page-history');
+            } catch (e) {
+                alert("เกิดข้อผิดพลาดในการทำรายการ");
+            }
+        });
+
+        // --- History & Admin Logic ---
         async function loadHistory() {
-            const q = query(collection(db, "orders"), where("uid", "==", auth.currentUser.uid), orderBy("date", "desc"));
-            const snap = await getDocs(q);
+            const user = auth.currentUser;
+            if(!user) return;
             const tbody = document.getElementById('history-table');
-            tbody.innerHTML = "";
-            snap.forEach(d => {
-                const o = d.data();
-                const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${o.pName}</td><td>${o.price}</td>
-                <td><span class="status-badge ${o.status==='success'?'badge-success':'badge-pending'}">${o.status}</span></td>
-                <td>${o.info || '-'}</td><td>${o.date ? o.date.toDate().toLocaleString('th-TH') : '-'}</td>`;
-                tbody.appendChild(tr);
-            });
+            tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>กำลังโหลดข้อมูล...</td></tr>";
+            try {
+                const q = query(collection(db, "orders"), where("uid", "==", user.uid), orderBy("date", "desc"));
+                const snap = await getDocs(q);
+                tbody.innerHTML = "";
+                if(snap.empty) {
+                    tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>ยังไม่มีประวัติการสั่งซื้อ</td></tr>";
+                    return;
+                }
+                snap.forEach(d => {
+                    const o = d.data();
+                    const tr = document.createElement('tr');
+                    const dateStr = o.date ? o.date.toDate().toLocaleString('th-TH') : '-';
+                    let statusText = 'รอดำเนินการ';
+                    let statusClass = 'badge-pending';
+                    if(o.status === 'success') { statusText = 'สำเร็จ'; statusClass = 'badge-success'; }
+                    if(o.status === 'rejected') { statusText = 'ถูกยกเลิก (คืนเงิน)'; statusClass = 'badge-danger'; }
+                    
+                    tr.innerHTML = `
+                        <td>${o.pName || 'ไม่ทราบชื่อ'}</td>
+                        <td>฿${o.price || 0}</td>
+                        <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                        <td><div style="max-width:200px; word-wrap:break-word; color:#00d2ff;">${o.info || '-'}</div></td>
+                        <td>${dateStr}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>เกิดข้อผิดพลาดในการโหลดข้อมูล</td></tr>";
+            }
         }
 
-        // --- Admin Controls ---
+        // --- Admin Dashboard Functions ---
         window.openAdminPage = () => { routeTo('page-admin'); switchTab('users'); };
-
         window.switchTab = (tab) => {
             document.querySelectorAll('.admin-panel-box').forEach(b => b.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active-tab'));
-            document.getElementById('tab-' + tab).style.display = 'block';
-            event.target.classList.add('active-tab');
+            document.getElementById('tab-'+tab).style.display = 'block';
+            if(event) event.target.classList.add('active-tab');
+            
             if(tab === 'users') loadAdminUsers();
             if(tab === 'products') loadAdminProducts();
+            if(tab === 'requests') loadAdminRequests();
             if(tab === 'orders') loadAdminOrders();
             if(tab === 'codes') loadAdminCodes();
         };
@@ -614,109 +666,167 @@
                 const u = d.data();
                 const tr = document.createElement('tr');
                 tr.innerHTML = `<td>${u.username}</td><td>${u.password}</td><td>${u.role}</td><td>${u.credit}</td>
-                <td><button onclick="editCredit('${d.id}')">เติม/ลดเงิน</button></td>`;
+                    <td>
+                        <button onclick="editCredit('${d.id}')">แก้เครดิต</button>
+                        <button onclick="makeAdmin('${d.id}')">ตั้งแอดมิน</button>
+                    </td>`;
                 tbody.appendChild(tr);
             });
         }
 
-        window.editCredit = async (uid) => {
-            const amt = prompt("ใส่จำนวนเงินที่ต้องการเพิ่ม (ใส่ - เพื่อลดเงิน):");
-            if(amt) {
-                await updateDoc(doc(db, "users", uid), { credit: increment(parseInt(amt)) });
-                loadAdminUsers();
-            }
+        window.editCredit = async (id) => {
+            const amt = prompt("ระบุจำนวนเงินที่ต้องการปรับ (บวก=เพิ่ม, ลบ=ลด)");
+            if(amt) { await updateDoc(doc(db, "users", id), { credit: increment(parseInt(amt)) }); loadAdminUsers(); }
         };
 
+        window.makeAdmin = async (id) => {
+            if(confirm("ต้องการตั้งผู้ใช้คนนี้เป็นแอดมินใช่หรือไม่?")) { await updateDoc(doc(db, "users", id), { role: 'admin' }); loadAdminUsers(); }
+        };
+
+        // Request Listener (Pending Notify)
         function listenToRequests() {
-            onSnapshot(query(collection(db, "requests"), where("status", "==", "pending")), (snap) => {
-                document.getElementById('req-notify').innerText = snap.size;
-                document.getElementById('req-notify').style.display = snap.size > 0 ? 'inline-block' : 'none';
-                document.getElementById('admin-notify').innerText = snap.size;
-                document.getElementById('admin-notify').style.display = snap.size > 0 ? 'inline-block' : 'none';
-                
-                const tbody = document.getElementById('admin-request-table');
-                tbody.innerHTML = "";
-                snap.forEach(d => {
-                    const r = d.data();
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td>${r.type}</td><td>${r.username}</td><td>${r.amount}</td>
-                    <td><button onclick="viewSlip('${r.slipUrl}')">ดูสลิป/ข้อมูล</button></td>
-                    <td><button onclick="approveReq('${d.id}', true)" style="background:green; color:white;">อนุมัติ</button>
-                        <button onclick="approveReq('${d.id}', false)" style="background:red; color:white;">ปฏิเสธ</button></td>`;
-                    tbody.appendChild(tr);
-                });
+            onSnapshot(query(collection(db, "topups"), where("status", "==", "pending")), (snap) => {
+                updateAdminNotify();
+                if(document.getElementById('tab-requests').style.display === 'block') loadAdminRequests();
+            });
+            onSnapshot(query(collection(db, "withdrawals"), where("status", "==", "pending")), (snap) => {
+                updateAdminNotify();
+                if(document.getElementById('tab-requests').style.display === 'block') loadAdminRequests();
             });
         }
 
-        window.viewSlip = (url) => {
-            if(!url || url === 'undefined') return alert("ไม่มีสลิป/ข้อมูล");
-            document.getElementById('imgModal').src = url;
-            document.getElementById('slipModal').style.display = 'block';
-        };
+        async function updateAdminNotify() {
+            const t = await getDocs(query(collection(db, "topups"), where("status", "==", "pending")));
+            const w = await getDocs(query(collection(db, "withdrawals"), where("status", "==", "pending")));
+            const total = t.size + w.size;
+            document.getElementById('admin-notify').innerText = total;
+            document.getElementById('admin-notify').style.display = total > 0 ? 'inline-block' : 'none';
+            document.getElementById('req-notify').innerText = total;
+            document.getElementById('req-notify').style.display = total > 0 ? 'inline-block' : 'none';
+        }
 
-        window.approveReq = async (id, status) => {
-            const rRef = doc(db, "requests", id);
-            const rSnap = await getDoc(rRef);
-            const r = rSnap.data();
-            if(status) {
-                if(r.type === 'topup') await updateDoc(doc(db, "users", r.uid), { credit: increment(r.amount) });
-                await updateDoc(rRef, { status: 'success' });
-                alert("ดำเนินการสำเร็จ");
-            } else {
-                if(r.type === 'withdraw') await updateDoc(doc(db, "users", r.uid), { credit: increment(r.amount) });
-                await updateDoc(rRef, { status: 'rejected' });
-                alert("ปฏิเสธคำขอแล้ว");
+        async function loadAdminRequests() {
+            const tbody = document.getElementById('admin-request-table');
+            tbody.innerHTML = "";
+            const tSnap = await getDocs(query(collection(db, "topups"), where("status", "==", "pending")));
+            tSnap.forEach(d => {
+                const r = d.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>[เติมเงิน] ${r.type}</td><td>${r.username}</td><td>${r.amount}</td>
+                    <td><button onclick="viewSlip('${r.slipUrl}')">ดูสลิป</button></td>
+                    <td>
+                        <button onclick="approveRequest('topups','${d.id}','${r.uid}',${r.amount})">อนุมัติ</button>
+                        <button onclick="rejectRequest('topups','${d.id}')" style="background:red;">ยกเลิก</button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+            const wSnap = await getDocs(query(collection(db, "withdrawals"), where("status", "==", "pending")));
+            wSnap.forEach(d => {
+                const r = d.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>[ถอนเงิน]</td><td>${r.username}</td><td>${r.amount}</td>
+                    <td>${r.bank} - ${r.accNum}</td>
+                    <td>
+                        <button onclick="approveRequest('withdrawals','${d.id}')">สำเร็จ</button>
+                        <button onclick="rejectWithdraw('${d.id}','${r.uid}',${r.amount})" style="background:red;">ยกเลิก</button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.viewSlip = (url) => { document.getElementById('imgModal').src = url; document.getElementById('slipModal').style.display = 'block'; };
+
+        window.approveRequest = async (col, id, uid, amt) => {
+            if(confirm("ยืนยันการอนุมัติรายการ?")) {
+                await updateDoc(doc(db, col, id), { status: 'success' });
+                if(col === 'topups') await updateDoc(doc(db, "users", uid), { credit: increment(amt) });
+                loadAdminRequests();
             }
         };
 
-        // --- ระบบจัดการ Order แบบใหม่ (Modal) ---
-        let selectedOrderId = null;
+        window.rejectRequest = async (col, id) => {
+            if(confirm("ต้องการยกเลิกรายการนี้?")) {
+                await updateDoc(doc(db, col, id), { status: 'rejected' });
+                loadAdminRequests();
+            }
+        };
+
+        window.rejectWithdraw = async (id, uid, amt) => {
+            if(confirm("ยกเลิกการถอนเงิน (จะคืนเครดิตให้ลูกค้า)?")) {
+                await updateDoc(doc(db, "withdrawals", id), { status: 'rejected' });
+                await updateDoc(doc(db, "users", uid), { credit: increment(amt) });
+                loadAdminRequests();
+            }
+        };
+
         async function loadAdminOrders() {
-            const snap = await getDocs(query(collection(db, "orders"), where("status", "==", "pending")));
             const tbody = document.getElementById('admin-order-table');
             tbody.innerHTML = "";
+            const snap = await getDocs(query(collection(db, "orders"), where("status", "==", "pending")));
             snap.forEach(d => {
                 const o = d.data();
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${d.id}</td><td>${o.pName}</td><td>${o.info}</td><td>${o.date ? o.date.toDate().toLocaleString() : '-'}</td>
-                <td><button class="btn-submit" style="margin:0; padding:5px 10px; background:var(--admin-gold); color:black;" onclick="openOrderAction('${d.id}', '${o.pName}', '${o.info}')">จัดการ</button></td>`;
+                tr.innerHTML = `<td>${d.id}</td><td>${o.pName}</td><td>${o.username}<br>${o.info}</td><td>${o.date?.toDate().toLocaleString()}</td>
+                    <td>
+                        <button onclick="completeOrder('${d.id}')" style="background:var(--success); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">เสร็จสิ้น</button>
+                        <button onclick="cancelAndRefundOrder('${d.id}','${o.uid}',${o.price})" style="background:var(--danger); color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; margin-left:5px;">ยกเลิกและคืนเงิน</button>
+                    </td>`;
                 tbody.appendChild(tr);
             });
         }
 
-        window.openOrderAction = (id, pName, info) => {
-            selectedOrderId = id;
-            document.getElementById('admin-order-detail').innerText = `สินค้า: ${pName}\nข้อมูลลูกค้า: ${info}`;
-            document.getElementById('adminOrderModal').style.display = 'flex';
+        window.completeOrder = async (id) => {
+            if(confirm("ยืนยันส่งงานเรียบร้อย? รายการนี้จะย้ายไปหน้าประวัติสำเร็จของลูกค้า")) {
+                await updateDoc(doc(db, "orders", id), { status: 'success' });
+                loadAdminOrders();
+            }
         };
 
-        document.getElementById('btn-order-success').addEventListener('click', async () => {
-            if(!selectedOrderId) return;
-            await updateDoc(doc(db, "orders", selectedOrderId), { status: 'success' });
-            alert("ส่งงานสำเร็จ!");
-            document.getElementById('adminOrderModal').style.display = 'none';
-            loadAdminOrders();
-        });
+        window.cancelAndRefundOrder = async (id, uid, price) => {
+            if(confirm("ยกเลิกรายการนี้และคืนเงิน ฿" + price + " ใช่หรือไม่?")) {
+                await updateDoc(doc(db, "orders", id), { status: 'rejected' });
+                await updateDoc(doc(db, "users", uid), { credit: increment(price) });
+                alert("ยกเลิกและคืนเงินเรียบร้อย");
+                loadAdminOrders();
+            }
+        };
 
-        document.getElementById('btn-order-refund').addEventListener('click', async () => {
-            if(!selectedOrderId) return;
-            const oSnap = await getDoc(doc(db, "orders", selectedOrderId));
-            const o = oSnap.data();
-            await updateDoc(doc(db, "users", o.uid), { credit: increment(o.price) });
-            await updateDoc(doc(db, "orders", selectedOrderId), { status: 'refunded', info: 'ยกเลิกและคืนเงินแล้ว' });
-            alert("ยกเลิกและคืนเงินสำเร็จ!");
-            document.getElementById('adminOrderModal').style.display = 'none';
-            loadAdminOrders();
-        });
+        // --- Gift Code & Products Management ---
+        window.addProduct = async () => {
+            const name = document.getElementById('p-name').value;
+            const price = parseInt(document.getElementById('p-price').value);
+            const img = document.getElementById('p-img').value;
+            const type = document.getElementById('p-type').value;
+            const stock = document.getElementById('p-stock').value.split('\n').filter(s => s.trim() !== "");
+            if(!name || !price) return alert("กรุณาระบุชื่อและราคา");
+            await addDoc(collection(db, "products"), { name, price, img, type, stock, date: serverTimestamp() });
+            alert("เพิ่มสินค้าสำเร็จ");
+            loadAdminProducts();
+        };
 
-        // --- Gift Code System ---
+        async function loadAdminProducts() {
+            const snap = await getDocs(collection(db, "products"));
+            const tbody = document.getElementById('admin-p-table');
+            tbody.innerHTML = "";
+            snap.forEach(d => {
+                const p = d.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${p.name}</td><td>${p.price}</td><td>${p.stock?.length || 0}</td> <td><button onclick="removeProduct('${d.id}')" style="background:red; color:white;">ลบ</button></td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.removeProduct = async (id) => {
+            if(confirm("ลบสินค้านี้อย่างถาวร?")) { await deleteDoc(doc(db, "products", id)); loadAdminProducts(); loadShop(); }
+        };
+
         window.createGiftCode = async () => {
             const name = document.getElementById('new-code-name').value.trim();
             const credit = parseInt(document.getElementById('new-code-credit').value);
             const limit = parseInt(document.getElementById('new-code-limit').value);
-            if(!name || !credit) return alert("กรุณากรอกข้อมูลโค้ด");
+            if(!name || !credit) return alert("ข้อมูลไม่ครบ");
             await setDoc(doc(db, "giftcodes", name), { credit, limit, usedBy: [] });
-            alert("สร้างโค้ดสำเร็จ");
+            alert("สร้าง Code สำเร็จ");
             loadAdminCodes();
         };
 
@@ -727,35 +837,32 @@
             snap.forEach(d => {
                 const c = d.data();
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${d.id}</td><td>${c.credit}</td><td>${c.limit}</td>
-                <td><button onclick="deleteCode('${d.id}')">ลบ</button></td>`;
+                tr.innerHTML = `<td>${d.id}</td><td>${c.credit}</td><td>${c.limit}</td> <td><button onclick="deleteCode('${d.id}')">ลบ</button></td>`;
                 tbody.appendChild(tr);
             });
         }
 
         window.deleteCode = async (id) => {
-            if(confirm("ลบโค้ดนี้?")) {
-                await deleteDoc(doc(db, "giftcodes", id));
-                loadAdminCodes();
-            }
+            if(confirm("ลบ Code นี้?")) { await deleteDoc(doc(db, "giftcodes", id)); loadAdminCodes(); }
         };
 
         window.redeemCode = async () => {
             const codeIn = document.getElementById('input-gift-code').value.trim();
-            if(!codeIn) return alert("ระบุโค้ดก่อน");
+            if(!codeIn) return alert("ระบุ Code ก่อน");
             const cRef = doc(db, "giftcodes", codeIn);
             const cSnap = await getDoc(cRef);
-            if(!cSnap.exists()) return alert("ไม่พบโค้ดนี้");
+            if(!cSnap.exists()) return alert("ไม่พบ Code นี้ในระบบ");
             const cData = cSnap.data();
-            if(cData.limit <= 0) return alert("โค้ดหมดแล้ว");
-            if(cData.usedBy.includes(auth.currentUser.uid)) return alert("คุณใช้โค้ดนี้ไปแล้ว");
+            if(cData.limit <= 0) return alert("Code นี้ถูกใช้ครบจำนวนแล้ว");
+            if(cData.usedBy.includes(auth.currentUser.uid)) return alert("คุณเคยใช้ Code นี้ไปแล้ว");
+            
             await updateDoc(cRef, { limit: increment(-1), usedBy: [...cData.usedBy, auth.currentUser.uid] });
             await updateDoc(doc(db, "users", auth.currentUser.uid), { credit: increment(cData.credit) });
-            alert(`รับเครดิตสำเร็จ +${cData.credit}`);
+            alert(`แลก Code สำเร็จ! ได้รับเครดิต +${cData.credit}`);
             document.getElementById('input-gift-code').value = "";
         };
 
-        // --- Settings ---
+        // --- Web Settings Logic ---
         window.saveSettings = async () => {
             await setDoc(doc(db, "settings", "web"), {
                 announcement: document.getElementById('set-announcement').value,
@@ -771,7 +878,7 @@
                 banner3: document.getElementById('set-b3').value,
                 banner4: document.getElementById('set-b4').value
             }, { merge: true });
-            alert("บันทึกสำเร็จ");
+            alert("บันทึกการตั้งค่าสำเร็จ");
             location.reload();
         };
 
@@ -779,9 +886,9 @@
             const snap = await getDoc(doc(db, "settings", "web"));
             if(snap.exists()){
                 const d = snap.data();
-                document.getElementById('display-announcement').innerText = d.announcement || "";
+                document.getElementById('display-announcement').innerText = d.announcement || "BestWeb Store";
                 const nameEl = document.getElementById('display-web-name');
-                nameEl.innerText = d.webName || "Store";
+                nameEl.innerText = d.webName || "STORE";
                 if(d.webColor) nameEl.style.color = d.webColor;
                 document.getElementById('display-logo').src = d.logoUrl || "";
                 document.getElementById('admin-qr-img').src = d.qrUrl || "";
@@ -789,6 +896,7 @@
                 document.getElementById('admin-tm-name').innerText = d.tmName || "-";
                 document.getElementById('nav-contact-link').href = d.contactUrl || "#";
                 
+                // Set Inputs for Admin
                 document.getElementById('set-announcement').value = d.announcement || "";
                 document.getElementById('set-web-name').value = d.webName || "";
                 document.getElementById('set-web-color').value = d.webColor || "";
@@ -801,65 +909,63 @@
                 document.getElementById('set-b2').value = d.banner2 || "";
                 document.getElementById('set-b3').value = d.banner3 || "";
                 document.getElementById('set-b4').value = d.banner4 || "";
-
-                if(d.banner1) document.getElementById('b-img-1').src = d.banner1;
-                if(d.banner2) document.getElementById('b-img-2').src = d.banner2;
-                if(d.banner3) document.getElementById('b-img-3').src = d.banner3;
-                if(d.banner4) document.getElementById('b-img-4').src = d.banner4;
+                for(let i=1; i<=4; i++) {
+                    const bUrl = d[`banner${i}`];
+                    if(bUrl) document.getElementById(`b-img-${i}`).src = bUrl;
+                }
             }
         }
 
-        // --- Topup Functions ---
+        // Topup & Withdrawal Logic
         window.selectTopup = (type) => {
+            window.currentTopupType = type;
+            document.getElementById('topup-selection').style.display = 'none';
             document.getElementById('topup-form').style.display = 'block';
             document.getElementById('pp-detail').style.display = type === 'promptpay' ? 'block' : 'none';
             document.getElementById('tm-detail').style.display = type === 'truemoney' ? 'block' : 'none';
-            window.currentTopupType = type;
         };
 
         window.previewSlip = (input) => {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const el = document.getElementById('slip-img-preview');
-                    el.src = e.target.result;
-                    el.style.display = 'block';
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
+            const reader = new FileReader();
+            reader.onload = (e) => { 
+                const el = document.getElementById('slip-img-preview');
+                el.src = e.target.result;
+                el.style.display = 'block';
+            };
+            if(input.files[0]) reader.readAsDataURL(input.files[0]);
         };
 
         document.getElementById('submit-topup').addEventListener('click', async () => {
-            const amt = document.getElementById('topup-amount').value;
+            const amt = parseInt(document.getElementById('topup-amount').value);
+            const fileInput = document.getElementById('topup-slip');
+            if(!amt || !fileInput.files[0]) return alert("กรุณาระบุยอดเงินและแนบหลักฐานสลิป");
+
             const slip = document.getElementById('slip-img-preview').src;
-            if(!amt || !slip) return alert("กรุณากรอกยอดเงินและแนบสลิป");
-            const uSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
-            await addDoc(collection(db, "requests"), {
-                uid: auth.currentUser.uid, username: uSnap.data().username, amount: parseInt(amt), slipUrl: slip, type: 'topup', status: 'pending', date: serverTimestamp()
+            const user = auth.currentUser;
+            const uSnap = await getDoc(doc(db, "users", user.uid));
+            
+            await addDoc(collection(db, "topups"), {
+                uid: user.uid, username: uSnap.data().username, amount: amt, slipUrl: slip, status: 'pending', type: window.currentTopupType, date: serverTimestamp()
             });
-            alert("แจ้งโอนสำเร็จ รอการตรวจสอบ");
+            alert("แจ้งเติมเงินเรียบร้อย รอแอดมินตรวจสอบภายใน 1-5 นาที");
             routeTo('page-shop');
         });
 
-        // --- Withdraw ---
         document.getElementById('do-withdraw').addEventListener('click', async () => {
             const bank = document.getElementById('withdraw-bank').value;
-            const amt = parseInt(document.getElementById('withdraw-amount').value);
-            const acc = document.getElementById('withdraw-acc-num').value;
-            const uRef = doc(db, "users", auth.currentUser.uid);
-            const uSnap = await getDoc(uRef);
-            const u = uSnap.data();
+            const amount = parseInt(document.getElementById('withdraw-amount').value);
+            const accNum = document.getElementById('withdraw-acc-num').value.trim();
+            const user = auth.currentUser;
 
-            if(!bank || !amt || !acc) return alert("กรุณากรอกข้อมูลให้ครบ");
-            if(amt < 100) return alert("ถอนขั้นต่ำ 100 บาท");
-            if(u.credit < amt) return alert("เครดิตไม่เพียงพอ");
+            if(!bank || !amount || !accNum) return alert("กรุณาระบุข้อมูลให้ครบถ้วน");
+            const uSnap = await getDoc(doc(db, "users", user.uid));
+            if(uSnap.data().credit < amount) return alert("ยอดเครดิตของคุณไม่เพียงพอสำหรับการถอน");
 
-            await updateDoc(uRef, { credit: increment(-amt) });
-            await addDoc(collection(db, "requests"), {
-                uid: auth.currentUser.uid, username: u.username, amount: amt, type: 'withdraw', status: 'pending',
-                info: `ธนาคาร: ${bank} เลขบัญชี: ${acc}`, date: serverTimestamp()
+            await updateDoc(doc(db, "users", user.uid), { credit: increment(-amount) });
+            await addDoc(collection(db, "withdrawals"), {
+                uid: user.uid, username: uSnap.data().username, amount, bank, accNum, status: 'pending', date: serverTimestamp()
             });
-            alert("ส่งคำขอถอนเงินแล้ว");
+            alert("ส่งคำขอถอนเงินแล้ว แอดมินจะดำเนินการโอนเงินให้ท่านโดยเร็ว");
             routeTo('page-shop');
         });
 
