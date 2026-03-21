@@ -115,6 +115,8 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .qr-display { max-width: 250px; margin: 15px auto; display: block; border-radius: 10px; }
         .slip-preview { max-width: 100%; margin-top: 10px; border-radius: 5px; display: none; }
+
+        .role-select { background: #222; color: #fff; border: 1px solid #444; padding: 4px; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -400,7 +402,7 @@
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, getDocs, where, serverTimestamp, deleteDoc, onSnapshot, orderBy, addDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Firebase Config (คงเดิมตามสคริปต์ล่าสุด)
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyC5HWgNuzuK7nZRWP01hDaxcLfy2GWjt18",
             authDomain: "bestwev-af0c6.firebaseapp.com",
@@ -413,12 +415,13 @@
 
         let currentSlide = 0;
         let bannerTimer = null;
+        let currentUserData = null; // Store current user profile for role checks
 
         // Routing System
         window.routeTo = (id) => {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            window.scrollTo(0, 0); // เลื่อนขึ้นบนสุดเมื่อเปลี่ยนหน้า
+            window.scrollTo(0, 0);
             if(id === 'page-shop') { startBanner(); loadShop(); }
             if(id === 'page-history') loadHistory();
         };
@@ -441,8 +444,11 @@
                 onSnapshot(doc(db, "users", user.uid), (snap) => {
                     if (snap.exists()) {
                         const uData = snap.data();
+                        currentUserData = uData; // Save globally
                         document.getElementById('nav-info').style.display = 'flex';
                         document.getElementById('display-credit').innerText = uData.credit;
+                        
+                        // Show Admin Button for any admin role
                         document.getElementById('admin-control-btn').style.display = uData.role === 'admin' ? 'block' : 'none';
                         
                         if(uData.role === 'admin') { listenToRequests(); loadAdminOrders(); }
@@ -450,6 +456,7 @@
                     }
                 });
             } else {
+                currentUserData = null;
                 document.getElementById('nav-info').style.display = 'none';
                 routeTo('page-login');
             }
@@ -519,7 +526,6 @@
             });
         }
 
-        // ขั้นตอนการซื้อใหม่: ยืนยันก่อน
         window.startBuyProcess = async (id) => {
             const pSnap = await getDoc(doc(db, "products", id));
             const p = pSnap.data();
@@ -530,14 +536,12 @@
                 document.getElementById('confirm-p-details').innerText = `คุณต้องการซื้อ "${p.name}" ในราคา ฿${p.price} ใช่หรือไม่?`;
                 document.getElementById('confirmBuyModal').style.display = 'flex';
             } else {
-                // สำหรับ Manual ให้ไปหน้ากรอกข้อมูลเลย (ซึ่งในหน้านั้นมีปุ่มยืนยันอีกชั้นอยู่แล้ว)
                 window.currentManualProduct = { id, ...p };
                 document.getElementById('manual-p-name').innerText = "สินค้า: " + p.name + " (ราคา ฿" + p.price + ")";
                 document.getElementById('manualBuyModal').style.display = 'flex';
             }
         };
 
-        // ยืนยันซื้อระบบ Auto
         document.getElementById('final-confirm-buy').addEventListener('click', async () => {
             const id = window.tempProductId;
             const p = window.tempProductData;
@@ -573,7 +577,6 @@
 
         window.closeManualModal = () => { document.getElementById('manualBuyModal').style.display = 'none'; };
 
-        // ยืนยันซื้อระบบ Manual
         document.getElementById('confirm-manual-buy').addEventListener('click', async () => {
             const userIn = document.getElementById('manual-user-input').value.trim();
             const passIn = document.getElementById('manual-pass-input').value.trim();
@@ -606,7 +609,7 @@
             }
         });
 
-        // --- History & Admin Logic ---
+        // --- History ---
         async function loadHistory() {
             const user = auth.currentUser;
             if(!user) return;
@@ -643,7 +646,7 @@
             }
         }
 
-        // --- Admin Dashboard Functions ---
+        // --- Admin Functions ---
         window.openAdminPage = () => { routeTo('page-admin'); switchTab('users'); };
         window.switchTab = (tab) => {
             document.querySelectorAll('.admin-panel-box').forEach(b => b.style.display = 'none');
@@ -656,34 +659,67 @@
             if(tab === 'requests') loadAdminRequests();
             if(tab === 'orders') loadAdminOrders();
             if(tab === 'codes') loadAdminCodes();
+            if(tab === 'settings') loadWebSettings();
         };
 
+        // Handle User Role & Credit Management
         async function loadAdminUsers() {
             const snap = await getDocs(collection(db, "users"));
             const tbody = document.getElementById('user-table');
             tbody.innerHTML = "";
+            
+            // ตรวจสอบว่าบัญชีปัจจุบันคือ "admin" ตัวจริงหรือไม่
+            const isSuperAdmin = currentUserData && currentUserData.username === 'admin';
+
             snap.forEach(d => {
                 const u = d.data();
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${u.username}</td><td>${u.password}</td><td>${u.role}</td><td>${u.credit}</td>
+                
+                // ตัวเลือกเปลี่ยน Role (เฉพาะ Super Admin เท่านั้นที่เห็นและใช้ได้)
+                let roleControl = `<span class="status-badge ${u.role==='admin'?'badge-success':'badge-pending'}">${u.role}</span>`;
+                if(isSuperAdmin && u.username !== 'admin') {
+                    roleControl = `
+                        <select class="role-select" onchange="changeUserRole('${d.id}', this.value)">
+                            <option value="user" ${u.role==='user'?'selected':''}>User</option>
+                            <option value="admin" ${u.role==='admin'?'selected':''}>Admin</option>
+                        </select>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td>${u.username} ${u.username === 'admin' ? '⭐' : ''}</td>
+                    <td>${u.password}</td>
+                    <td>${roleControl}</td>
+                    <td>${u.credit}</td>
                     <td>
                         <button onclick="editCredit('${d.id}')">แก้เครดิต</button>
-                        <button onclick="makeAdmin('${d.id}')">ตั้งแอดมิน</button>
                     </td>`;
                 tbody.appendChild(tr);
             });
         }
+
+        // Function for Super Admin to change role
+        window.changeUserRole = async (id, newRole) => {
+            if(currentUserData.username !== 'admin') return alert("สิทธิ์ในการจัดการระดับผู้ใช้เป็นของบัญชี admin เท่านั้น");
+            if(confirm(`ยืนยันการเปลี่ยนระดับผู้ใช้เป็น ${newRole}?`)) {
+                try {
+                    await updateDoc(doc(db, "users", id), { role: newRole });
+                    alert("เปลี่ยนระดับผู้ใช้สำเร็จ");
+                    loadAdminUsers();
+                } catch (e) {
+                    alert("เกิดข้อผิดพลาด");
+                }
+            } else {
+                loadAdminUsers(); // Refresh to reset select
+            }
+        };
 
         window.editCredit = async (id) => {
             const amt = prompt("ระบุจำนวนเงินที่ต้องการปรับ (บวก=เพิ่ม, ลบ=ลด)");
             if(amt) { await updateDoc(doc(db, "users", id), { credit: increment(parseInt(amt)) }); loadAdminUsers(); }
         };
 
-        window.makeAdmin = async (id) => {
-            if(confirm("ต้องการตั้งผู้ใช้คนนี้เป็นแอดมินใช่หรือไม่?")) { await updateDoc(doc(db, "users", id), { role: 'admin' }); loadAdminUsers(); }
-        };
-
-        // Request Listener (Pending Notify)
+        // Request Listener
         function listenToRequests() {
             onSnapshot(query(collection(db, "topups"), where("status", "==", "pending")), (snap) => {
                 updateAdminNotify();
@@ -791,7 +827,7 @@
             }
         };
 
-        // --- Gift Code & Products Management ---
+        // --- Gift Code & Products ---
         window.addProduct = async () => {
             const name = document.getElementById('p-name').value;
             const price = parseInt(document.getElementById('p-price').value);
@@ -862,7 +898,7 @@
             document.getElementById('input-gift-code').value = "";
         };
 
-        // --- Web Settings Logic ---
+        // --- Settings ---
         window.saveSettings = async () => {
             await setDoc(doc(db, "settings", "web"), {
                 announcement: document.getElementById('set-announcement').value,
@@ -896,7 +932,6 @@
                 document.getElementById('admin-tm-name').innerText = d.tmName || "-";
                 document.getElementById('nav-contact-link').href = d.contactUrl || "#";
                 
-                // Set Inputs for Admin
                 document.getElementById('set-announcement').value = d.announcement || "";
                 document.getElementById('set-web-name').value = d.webName || "";
                 document.getElementById('set-web-color').value = d.webColor || "";
@@ -916,7 +951,7 @@
             }
         }
 
-        // Topup & Withdrawal Logic
+        // --- Topup & Withdraw ---
         window.selectTopup = (type) => {
             window.currentTopupType = type;
             document.getElementById('topup-selection').style.display = 'none';
